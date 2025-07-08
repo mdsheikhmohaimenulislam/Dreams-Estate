@@ -30,7 +30,7 @@ const NavBar = () => {
     <>
       {user && (
         <>
-          <div className="ml-5">
+          <div className=" lg:ml-5">
             <NavLink className="font-extrabold text-xl" to="/dashboard">
               Dashboard
             </NavLink>
