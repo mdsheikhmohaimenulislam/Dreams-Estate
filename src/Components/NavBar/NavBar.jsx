@@ -30,9 +30,11 @@ const NavBar = () => {
     <>
       {user && (
         <>
-          <NavLink className="font-extrabold text-xl" to="/dashboard">
-            Dashboard
-          </NavLink>
+          <div className="ml-5">
+            <NavLink className="font-extrabold text-xl" to="/dashboard">
+              Dashboard
+            </NavLink>
+          </div>
         </>
       )}
     </>
