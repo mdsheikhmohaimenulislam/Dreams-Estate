@@ -6,12 +6,14 @@ import { Bounce, toast } from "react-toastify";
 import { AuthContext } from "../../Context/AuthContext/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
+import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
   const { loginHandle, googleHandle, githubLogin } = use(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
+  const [showHide, setShowHide] = useState(false);
 
   const loginHandleContent = (e) => {
     e.preventDefault();
@@ -135,11 +137,23 @@ const Login = () => {
                 className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
               />
             </div>
-            <div className="space-y-1 text-sm">
-              <label className="block dark:text-gray-600">Password</label>
+            <div className=" relative space-y-1 text-sm">
+              <label className="label ">
+                <span className="label-text">Password</span>
+                <span
+                  className="absolute z-10 top-8 left-80 p-1 rounded-xl cursor-pointer"
+                  onClick={() => setShowHide(!showHide)}
+                >
+                  {showHide ? (
+                    <AiTwotoneEye size={18} />
+                  ) : (
+                    <AiTwotoneEyeInvisible size={18} />
+                  )}
+                </span>
+              </label>
               <input
                 required
-                type="password"
+                type={showHide ? "text" : "password"}
                 name="password"
                 id="password"
                 placeholder="Password"

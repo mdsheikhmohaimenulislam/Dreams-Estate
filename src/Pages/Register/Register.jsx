@@ -158,7 +158,7 @@ const Register = () => {
               />
             </div>
             <div className="space-y-1 text-sm">
-              <label className="block dark:text-gray-600">Password</label>
+              <label className="block  dark:text-gray-600">Password</label>
               <input
                 required
                 type="password"
