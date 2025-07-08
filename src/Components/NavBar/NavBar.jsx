@@ -52,7 +52,7 @@ const NavBar = () => {
   );
 
   return (
-    <div className="bg-[#064d57] shadow-sm">
+    <div className="bg-[#064d57] shadow-sm sticky top-0 z-50">
       <div className="navbar w-11/12 mx-auto ">
         <div className="navbar-start">
           <div className="dropdown">
@@ -124,7 +124,7 @@ const NavBar = () => {
           )}
         </div>
         {/* Auth Button */}
-        <div className="  mr-8 hidden md:flex items-center gap-x-4">
+        <div className="  mr-5 hidden md:flex items-center gap-x-4">
           {user ? (
             <Link
               onClick={handleLogOut}
