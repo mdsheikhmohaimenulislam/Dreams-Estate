@@ -1,4 +1,8 @@
 import { BsFingerprint } from "react-icons/bs";
+import { FaUser } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
+import { MdRateReview } from "react-icons/md";
 // import { GrUserAdmin } from "react-icons/gr";
 import MenuItem from "./MenuItem";
 // import { useState } from "react";
@@ -12,7 +16,10 @@ const UserMenu = () => {
 
   return (
     <>
-      <MenuItem icon={BsFingerprint} label="My Orders1" address="my-orders" />
+      <MenuItem icon={FaUser} label="My Profile" address="myProfile" />
+      <MenuItem icon={FaHeart} label="Wishlist" address="wishlist" />
+      <MenuItem icon={FaHome} label="Property bought" address="propertyBought" />
+      <MenuItem icon={MdRateReview} label="My reviews" address="myReviews" />
 
 
 
