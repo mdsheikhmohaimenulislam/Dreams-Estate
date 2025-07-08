@@ -11,7 +11,7 @@ const Register = () => {
   const {
     signInHandle,
     updateProfileHandle,
-    githubLogin,
+    // githubLogin,
     setUser,
     googleHandle,
   } = use(AuthContext);
@@ -89,28 +89,28 @@ const Register = () => {
       });
   };
 
-  const githubHandle = () => {
-    githubLogin()
-      .then((res) => {
-        if (res) {
-          toast.success("Successful", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+//   const githubHandle = () => {
+//     githubLogin()
+//       .then((res) => {
+//         if (res) {
+//           toast.success("Successful", {
+//             position: "top-right",
+//             autoClose: 5000,
+//             hideProgressBar: false,
+//             closeOnClick: false,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: "light",
+//           });
 
-          navigate(location?.state || "/");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+//           navigate(location?.state || "/");
+//         }
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   };
 
   // Dynamic title
   useEffect(() => {
@@ -188,7 +188,7 @@ const Register = () => {
             </button>
 
             <button
-              onClick={githubHandle}
+            //   onClick={githubHandle}
               aria-label="Log in with GitHub"
               className="p-3 cursor-pointer rounded-sm"
             >

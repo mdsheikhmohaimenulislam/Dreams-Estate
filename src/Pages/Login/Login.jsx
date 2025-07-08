@@ -9,7 +9,10 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
-  const { loginHandle, googleHandle, githubLogin } = use(AuthContext);
+  const { loginHandle,
+     googleHandle, 
+    //  githubLogin 
+    } = use(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
@@ -92,27 +95,27 @@ const Login = () => {
       });
   };
 
-  const githubHandle = () => {
-    githubLogin()
-      .then((res) => {
-        console.log(res);
-        toast.success("Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+  //   const githubHandle = () => {
+  //     githubLogin()
+  //       .then((res) => {
+  //         console.log(res);
+  //         toast.success("Successful", {
+  //           position: "top-right",
+  //           autoClose: 5000,
+  //           hideProgressBar: false,
+  //           closeOnClick: false,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //           theme: "light",
+  //         });
 
-        navigate(location?.state || "/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  //         navigate(location?.state || "/");
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   };
 
   // Dynamic title
   useEffect(() => {
@@ -191,7 +194,7 @@ const Login = () => {
               <FcGoogle size={30} />
             </button>
             <button
-              onClick={githubHandle}
+            //   onClick={githubHandle}
               aria-label="Log in with GitHub"
               className="p-3 cursor-pointer rounded-sm"
             >
