@@ -13,6 +13,11 @@ import { Link } from 'react-router'
 // import CustomerMenu from './Menu/CustomerMenu'
 // import logo from '../../../assets/images/logo-flat.png'
 import useAuth from '../../hooks/useAuth'
+import UserStatistic from '../UserStatistic/UserStatistic'
+import AgentStatistic from '../AgentStatistic/AgentStatistic'
+import UserMenu from '../Menu/UserMenu'
+import AgentMenu from '../Menu/AgentMenu'
+import AdminMenu from '../Menu/AdminMenu'
 const Sidebar = () => {
   const { logOut } = useAuth()
   const [isActive, setActive] = useState(false)
@@ -75,15 +80,14 @@ const Sidebar = () => {
           {/* Nav Items */}
           <div className='flex flex-col justify-between flex-1 mt-6'>
             <nav>
-              {/*  Menu Items */}
-              {/* <CustomerMenu /> */}
-              {/* <SellerMenu /> */}
+              {/*  Menu Items user or Agent or Admin menu*/}
+              <UserMenu/>
 
-              {/* <MenuItem
-                icon={BsGraphUp}
-                label='Statistics'
-                address='/dashboard'
-              /> */}
+
+              <AgentMenu/>
+
+
+              <AdminMenu/>
               {/* <AdminMenu /> */}
             </nav>
           </div>
