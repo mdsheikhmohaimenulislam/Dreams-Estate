@@ -1,22 +1,35 @@
-import { BsFillHouseAddFill } from 'react-icons/bs'
-import { MdHomeWork, MdOutlineManageHistory } from 'react-icons/md'
-import MenuItem from './MenuItem'
+import { FaUserTie } from "react-icons/fa";
+import { FaPlusSquare } from "react-icons/fa";
+import {MdHouseSiding } from "react-icons/md";
+import { LuCircleDollarSign } from "react-icons/lu";
+import { SiMinutemailer } from "react-icons/si";
+import MenuItem from "./MenuItem";
 const AgentMenu = () => {
   return (
     <>
       <MenuItem
-        icon={BsFillHouseAddFill}
-        label='Add Plant'
-        address='add-plant'
+        icon={FaUserTie }
+        label="Agent Profile"
+        address="agentProfile"
       />
-      <MenuItem icon={MdHomeWork} label='My Inventory' address='my-inventory' />
+      <MenuItem icon={FaPlusSquare} label="Add Property" address="addProperty" />
       <MenuItem
-        icon={MdOutlineManageHistory}
-        label='Manage Orders'
-        address='manage-orders'
+        icon={MdHouseSiding}
+        label="My added properties"
+        address="myAddedProperties"
+      />
+      <MenuItem
+        icon={ LuCircleDollarSign }
+        label="My sold properties"
+        address="mySoldProperties"
+      />
+      <MenuItem
+        icon={SiMinutemailer}
+        label="Requested properties"
+        address="requestedProperties"
       />
     </>
-  )
-}
+  );
+};
 
-export default AgentMenu
+export default AgentMenu;
