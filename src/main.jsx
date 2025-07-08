@@ -5,14 +5,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "react-router";
 import { router } from "./router/router";
 import { ToastContainer } from "react-toastify";
+import ContextProvider from "./Context/ContextProvider/ContextProvider";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <ToastContainer/>
+
+      <ContextProvider>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </ContextProvider>
+      
     </QueryClientProvider>
   </StrictMode>
 );

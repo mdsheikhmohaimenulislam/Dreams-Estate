@@ -1,16 +1,18 @@
-import React from 'react';
-import NavBar from '../Components/NavBar/NavBar';
-import { Outlet } from 'react-router';
-import Footer from '../Components/Footer/Footer';
+import React from "react";
+import NavBar from "../Components/NavBar/NavBar";
+import { Outlet } from "react-router";
+import Footer from "../Components/Footer/Footer";
 
 const Root = () => {
-    return (
-        <div>
-            <NavBar/>
-            <Outlet/>
-            <Footer/>
-        </div>
-    );
+  return (
+    <div>
+      <NavBar />
+      <div className="w-11/12 mx-auto px-5 min-h-[calc(100vh-68px)]">
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default Root;
