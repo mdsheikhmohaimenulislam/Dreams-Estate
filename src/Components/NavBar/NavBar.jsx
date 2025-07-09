@@ -103,7 +103,13 @@ const NavBar = () => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal text-white font-extrabold text-xl px-1">
-            {Links}
+            <NavLink className="text-xl font-extrabold" to="/">
+              Home
+            </NavLink>
+
+            <NavLink className="text-xl font-extrabold ml-5" to="/properties">
+              All properties
+            </NavLink>
             {link}
           </ul>
         </div>

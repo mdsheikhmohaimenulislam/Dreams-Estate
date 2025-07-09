@@ -25,7 +25,9 @@ export const router = createBrowserRouter([
 
       {
         path: "/properties",
-        Component: AllProperties,
+       element:<PrivateRouter>
+        <AllProperties/>
+       </PrivateRouter>
       },
 
       { path: "/login", Component: Login },
