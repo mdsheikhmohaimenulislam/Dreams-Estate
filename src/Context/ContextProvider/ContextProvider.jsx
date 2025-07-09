@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { AuthContext } from "../AuthContext/AuthContext";
@@ -39,12 +40,12 @@ const ContextProvider = ({ children }) => {
 
 
 //!that section use case
-//   const updateUserProfile = (name, photo) => {
-//     return updateProfile(auth.currentUser, {
-//       displayName: name,
-//       photoURL: photo,
-//     })
-//   }   
+  const updateUserProfile = (name, photo) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo,
+    })
+  }   
 
 
 
@@ -123,6 +124,7 @@ const googleHandle = () => {
     user,
     loading,
     setLoading,
+    updateUserProfile,
     signInHandle,
     loginHandle,
     logOutHandle,

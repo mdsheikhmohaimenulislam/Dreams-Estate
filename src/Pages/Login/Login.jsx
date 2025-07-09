@@ -9,10 +9,11 @@ import { FaGithub, FaTwitter } from "react-icons/fa";
 import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
-  const { loginHandle,
-     googleHandle, 
-    //  githubLogin 
-    } = use(AuthContext);
+  const {
+    loginHandle,
+    googleHandle,
+    //  githubLogin
+  } = use(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
@@ -173,47 +174,32 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="block w-full p-3 text-center rounded-sm dark:text-gray-50 dark:bg-violet-600"
+              className="block cursor-pointer w-full p-3 text-center rounded-sm dark:text-gray-50 dark:bg-[#064d57]"
             >
               Login
             </button>
           </form>
           <div className="flex items-center pt-4 space-x-1">
-            <div className="flex-1 h-px sm:w-16 dark:bg-gray-300"></div>
-            <p className="px-3 text-sm dark:text-gray-600">
-              Login with social accounts
+            <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
+            <p className="px-3 text-sm dark:text-gray-400">
+              Signup with social accounts
             </p>
-            <div className="flex-1 h-px sm:w-16 dark:bg-gray-300"></div>
+            <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
           </div>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={googleSignInHandle}
-              aria-label="Log in with Google"
-              className="rounded-sm cursor-pointer"
-            >
-              <FcGoogle size={30} />
-            </button>
-            <button
-            //   onClick={githubHandle}
-              aria-label="Log in with GitHub"
-              className="p-3 cursor-pointer rounded-sm"
-            >
-              <FaGithub size={30} />
-            </button>
+          <div
+            onClick={googleSignInHandle}
+            className="flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer"
+          >
+            <FcGoogle size={32} />
 
-            <button
-              aria-label="Log in with Twitter"
-              className="p-3 text-blue-500 rounded-sm"
-            >
-              <FaTwitter size={30} />
-            </button>
+            <p>Continue with Google</p>
           </div>
           <p className="text-xs text-center sm:px-6 dark:text-gray-600">
             Don't have an account?
             <Link
               rel="noopener noreferrer"
               to="/register"
-              className="underline dark:text-blue-800"
+              className="underline dark:text-[#064d57]"
             >
               Register
             </Link>

@@ -1,222 +1,180 @@
-import React, { use, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from 'react-router'
+import { FcGoogle } from 'react-icons/fc'
+import useAuth from '../../hooks/useAuth'
+import { toast } from 'react-hot-toast'
+import { TbFidgetSpinner } from 'react-icons/tb'
+import { imageUpload, saveUserInDb } from '../../api/utils'
 
-import { toast } from "react-toastify";
-import { AuthContext } from "../../Context/AuthContext/AuthContext";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub, FaTwitter } from "react-icons/fa";
+const SignUp = () => {
+  const { signInHandle, updateUserProfile, googleHandle, loading } = useAuth()
+  const navigate = useNavigate()
+  // form submit handler
+  const handleSubmit = async event => {
+    event.preventDefault()
+    const form = event.target
+    const name = form.name.value
+    const email = form.email.value
+    const password = form.password.value
 
-const Register = () => {
-  const navigate = useNavigate();
-  const {
-    signInHandle,
-    updateProfileHandle,
-    // githubLogin,
-    setUser,
-    googleHandle,
-  } = use(AuthContext);
-  const [errorMessage, setErrorMessage] = useState("");
+    const image = form?.image?.files[0]
 
-  const registerHandel = (e) => {
-    e.preventDefault();
-    const name = e.target.name.value;
-    const photo = e.target.photo.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    // image url response from imgbb
+    const imageUrl = await imageUpload(image)
 
-    setErrorMessage("");
+    try {
+      //2. User Registration
+      const result = await signInHandle(email, password)
 
-    const passwordPattern = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-    if (!passwordPattern.test(password) === true) {
-      setErrorMessage(
-        "Must have an Uppercase letter in the password, Must have a Lowercase letter in the password, Length must be at least 6 character"
-      );
-      return;
+      //3. Save username & profile photo
+      await updateUserProfile(name, imageUrl)
+      console.log(result)
+
+      const userData = {
+        name,
+        email,
+        image: imageUrl,
+      }
+      // Save user data in db
+      await saveUserInDb(userData)
+
+      navigate('/')
+      toast.success('Signup Successful')
+    } catch (err) {
+      console.log(err)
+      toast.error(err?.message)
     }
-    // Signed up
-    signInHandle(email, password)
-      .then((result) => {
-        const user = result.user;
+  }
 
-        toast.success("Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
-        //photo set
-        updateProfileHandle({ displayName: name, photoURL: photo })
-          .then(() => {
-            setUser({ ...user, displayName: name, photoURL: photo });
-            navigate("/");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setErrorMessage(error.message);
-      });
-  };
-
-  // google set up
-  const googleSignInHandle = () => {
-    googleHandle()
-      .then((res) => {
-        if (res) {
-          toast.success("Successful", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-
-          navigate(location?.state || "/");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-//   const githubHandle = () => {
-//     githubLogin()
-//       .then((res) => {
-//         if (res) {
-//           toast.success("Successful", {
-//             position: "top-right",
-//             autoClose: 5000,
-//             hideProgressBar: false,
-//             closeOnClick: false,
-//             pauseOnHover: true,
-//             draggable: true,
-//             progress: undefined,
-//             theme: "light",
-//           });
-
-//           navigate(location?.state || "/");
-//         }
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   };
-
-  // Dynamic title
-  useEffect(() => {
-    document.title = "Register";
-  }, []);
-
+  // Handle Google Signin
+  const handleGoogleSignIn = async () => {
+    try {
+      //User Registration using google
+      const result = await googleHandle()
+      const userData = {
+        name: result?.user?.displayName,
+        email: result?.user?.email,
+        image: result?.user?.photoURL,
+      }
+      await saveUserInDb(userData)
+      navigate('/')
+      toast.success('Signup Successful')
+    } catch (err) {
+      console.log(err)
+      toast.error(err?.message)
+    }
+  }
   return (
-    <>
-      {/* <NavBar/> */}
-      <div className={`mb-10 mt-10  min-h-screen p-10 bg-base-300`}>
-        <div className="w-full mx-auto max-w-md p-10 space-y-3 rounded-xl dark:bg-gray-50 dark:text-gray-800">
-          <h1 className="text-2xl font-bold text-center">Register</h1>
-          <form onSubmit={registerHandel} className="space-y-6 ">
-            <div className="space-y-1 text-sm">
-              <label className="block dark:text-gray-600">Your Name</label>
+    <div className='flex justify-center items-center min-h-screen bg-white'>
+      <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
+        <div className='mb-8 text-center'>
+          <h1 className='my-3 text-4xl font-bold'>Sign Up</h1>
+          <p className='text-sm text-gray-400'>Welcome to PlantNet</p>
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          noValidate=''
+          action=''
+          className='space-y-6 ng-untouched ng-pristine ng-valid'
+        >
+          <div className='space-y-4'>
+            <div>
+              <label htmlFor='email' className='block mb-2 text-sm'>
+                Name
+              </label>
               <input
-                required
-                type="text"
-                name="name"
-                id="name"
-                placeholder="name"
-                className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
+                type='text'
+                name='name'
+                id='name'
+                placeholder='Enter Your Name Here'
+                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-[#064d57] bg-gray-200 text-gray-900'
+                data-temp-mail-org='0'
               />
             </div>
-            <div className="space-y-1 text-sm">
-              <label className="block dark:text-gray-600">Photo URL</label>
+            <div>
+              <label htmlFor='image' className='block mb-2 text-sm'>
+                Select Image:
+              </label>
               <input
-                required
-                type="photo"
-                name="photo"
-                id="photo"
-                placeholder="photoURL"
-                className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
+                className='bg-gray-200 cursor-pointer'
+                type='file'
+                id='image'
+                name='image'
+                accept='image/*'
               />
             </div>
-            <div className="space-y-1 text-sm">
-              <label className="block dark:text-gray-600">Email</label>
+            <div>
+              <label htmlFor='email' className='block mb-2 text-sm'>
+                Email address
+              </label>
               <input
+                type='email'
+                name='email'
+                id='email'
                 required
-                type="text"
-                name="email"
-                id="Email"
-                placeholder="Email"
-                className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
+                placeholder='Enter Your Email Here'
+                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-[#064d57] bg-gray-200 text-gray-900'
+                data-temp-mail-org='0'
               />
             </div>
-            <div className="space-y-1 text-sm">
-              <label className="block  dark:text-gray-600">Password</label>
+            <div>
+              <div className='flex justify-between'>
+                <label htmlFor='password' className='text-sm mb-2'>
+                  Password
+                </label>
+              </div>
               <input
+                type='password'
+                name='password'
+                autoComplete='new-password'
+                id='password'
                 required
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
+                placeholder='*******'
+                className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-[#064d57] bg-gray-200 text-gray-900'
               />
             </div>
-            <button
-              type="submit"
-              className="block w-full p-3 text-center rounded-sm dark:text-gray-50 dark:bg-violet-600"
-            >
-              Sign in
-            </button>
-          </form>
-          {errorMessage && (
-            <p className="text-base text-red-600">{errorMessage}</p>
-          )}
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={googleSignInHandle}
-              aria-label="Log in with Google"
-              className="rounded-sm cursor-pointer"
-            >
-              <FcGoogle size={30} />
-            </button>
+          </div>
 
+          <div>
             <button
-            //   onClick={githubHandle}
-              aria-label="Log in with GitHub"
-              className="p-3 cursor-pointer rounded-sm"
+              type='submit'
+              className='bg-[#064d57] w-full cursor-pointer rounded-md py-3 text-white'
             >
-              <FaGithub size={30} />
-            </button>
-
-            <button
-              aria-label="Log in with Twitter"
-              className="p-3 text-blue-500 rounded-sm"
-            >
-              <FaTwitter size={30} />
+              {loading ? (
+                <TbFidgetSpinner className='animate-spin m-auto' />
+              ) : (
+                'Continue'
+              )}
             </button>
           </div>
-          <p className="text-xs text-center sm:px-6 dark:text-gray-600">
-            Have an account yet?
-            <Link
-              rel="noopener noreferrer"
-              to="/login"
-              className="underline dark:text-blue-800"
-            >
-              Login
-            </Link>
+        </form>
+        <div className='flex items-center pt-4 space-x-1'>
+          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
+          <p className='px-3 text-sm dark:text-gray-400'>
+            Signup with social accounts
           </p>
+          <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
-      </div>
-      {/* <Footer /> */}
-    </>
-  );
-};
+        <div
+          onClick={handleGoogleSignIn}
+          className='flex justify-center items-center space-x-2 border m-3 p-2 border-gray-300 border-rounded cursor-pointer'
+        >
+          <FcGoogle size={32} />
 
-export default Register;
+          <p>Continue with Google</p>
+        </div>
+        <p className='px-6 text-sm text-center text-gray-400'>
+          Already have an account?{' '}
+          <Link
+            to='/login'
+            className='hover:underline hover:text-[#064d57] text-gray-600'
+          >
+            Login
+          </Link>
+          .
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default SignUp
