@@ -8,10 +8,10 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase/firebase";
 import { AuthContext } from "../AuthContext/AuthContext";
+import axios from "axios";
 
 
 
@@ -37,19 +37,21 @@ const ContextProvider = ({ children }) => {
 
 
 
-  //  Update's profile
-  const updateProfileHandle = async ({ displayName, photoURL }) => {
-    if (!auth.currentUser) {
-      throw new Error("No user is signed in");
-    }
-  
-    setLoading(true);
-    try {
-      await updateProfile(auth.currentUser, { displayName, photoURL });
-    } finally {
-      setLoading(false);
-    }
-  };
+
+//!that section use case
+//   const updateUserProfile = (name, photo) => {
+//     return updateProfile(auth.currentUser, {
+//       displayName: name,
+//       photoURL: photo,
+//     })
+//   }   
+
+
+
+
+
+
+
 
 
 // github login
@@ -71,16 +73,49 @@ const googleHandle = () => {
     return signOut(auth);
   };
 
+
+
   // currently signed-in user
+//   useEffect(() => {
+//     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+//       setUser(currentUser);
+//       setLoading(false);
+//     });
+//     return () => {
+//       unSubscribe();
+//     };
+//   }, []);
+
+
+
+    // onAuthStateChange
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+    const unsubscribe = onAuthStateChanged(auth, async currentUser => {
+      console.log('CurrentUser-->', currentUser?.email)
+      if (currentUser?.email) {
+        setUser(currentUser)
+
+        // Get JWT token
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/jwt`,
+          {
+            email: currentUser?.email,
+          },
+          { withCredentials: true }
+        )
+      } else {
+        setUser(currentUser)
+        await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
+          withCredentials: true,
+        })
+      }
+      setLoading(false)
+    })
     return () => {
-      unSubscribe();
-    };
-  }, []);
+      return unsubscribe()
+    }
+  }, [])
+
 
 
 
@@ -93,7 +128,6 @@ const googleHandle = () => {
     logOutHandle,
     setUser,
     githubLogin,
-    updateProfileHandle,
     googleHandle,
   };
 

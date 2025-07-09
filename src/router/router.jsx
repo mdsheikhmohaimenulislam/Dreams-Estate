@@ -7,6 +7,7 @@ import AllProperties from "../Home/AllProperties/AllProperties";
 import PrivateRouter from "../Context/PrivateRouter/PrivateRouter";
 import DashboardRoot from "../DashboardLayOut/DashboardRoot/DashboardRoot";
 import DashboardHome from "../DashboardLayOut/DashboardHome/DashboardHome";
+import Profile from "../DashboardLayOut/Common/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRouter>
             <DashboardHome />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <PrivateRouter>
+            <Profile />
           </PrivateRouter>
         ),
       },
