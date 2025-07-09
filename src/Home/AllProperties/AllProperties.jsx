@@ -24,7 +24,7 @@ const AllProperties = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 ">
+      <div className="w-11/12 mx-auto  grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-20">
         {properties.map((property) => (
           <SingleCard key={property._id} property={property} />
         ))}

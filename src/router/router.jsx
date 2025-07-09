@@ -12,6 +12,7 @@ import AddProperty from "../DashboardLayOut/Agent/AddProperty";
 import MyAddProperties from "../DashboardLayOut/Agent/MyAddProperties/MyAddProperties";
 import UpdateMyProperties from "../DashboardLayOut/Agent/MyAddProperties/UpdateMyProperties";
 import OfferedProperties from "../DashboardLayOut/Agent/OfferedProperties/OfferedProperties";
+import DetailsPage from "../Home/AllProperties/DetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,14 @@ export const router = createBrowserRouter([
         path: "/properties",
        element:<PrivateRouter>
         <AllProperties/>
+       </PrivateRouter>
+      },
+
+      {
+        path: "/DetailsPage/:id",
+         loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/properties/${params.id}`),
+       element:<PrivateRouter>
+        <DetailsPage/>
        </PrivateRouter>
       },
 
