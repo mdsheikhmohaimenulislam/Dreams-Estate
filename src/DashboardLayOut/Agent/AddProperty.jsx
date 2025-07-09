@@ -1,184 +1,216 @@
-import { useState } from 'react'
-import useAuth from '../../hooks/useAuth'
-import { imageUpload } from '../../api/utils'
-import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
-import toast from 'react-hot-toast'
+import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
+import { imageUpload } from "../../api/utils";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddPropertyForm = () => {
-  const { user } = useAuth()
-  const [uploadedImage, setUploadedImage] = useState(null)
-  const [imageUploadError, setImageUploadError] = useState(null)
+  const { user } = useAuth();
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
 
   const { mutate: submitProperty, isPending: isSubmitting } = useMutation({
     mutationFn: async (propertyData) => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/add-properties`,
         propertyData
-      )
-      return data
+      );
+      return data;
     },
     onSuccess: () => {
-      toast.success('Property added successfully!')
-      setUploadedImage(null)
-      document.getElementById('add-property-form').reset()
+      toast.success("Property added successfully!");
+      setUploadedImage(null);
+      document.getElementById("add-property-form").reset();
     },
     onError: () => {
-      toast.error('Submission failed!')
+      toast.error("Submission failed!");
     },
-  })
-
-
-
+  });
 
   const handleImageUpload = async (e) => {
-    const image = e.target.files[0]
+    const image = e.target.files[0];
     try {
-      const url = await imageUpload(image)
-      setUploadedImage(url)
-      setImageUploadError(null)
+      const url = await imageUpload(image);
+      setUploadedImage(url);
+      setImageUploadError(null);
     } catch (err) {
-        console.log(err);
-      setImageUploadError('Image upload failed!')
+      console.log(err);
+      setImageUploadError("Image upload failed!");
     }
-  }
-
-
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const form = e?.target
+    e.preventDefault();
+    const form = e?.target;
 
     const property = {
       title: form?.title?.value,
       location: form?.location?.value,
-      MaximumPrice : form?.MaximumPrice?.value,
+      MaximumPrice: form?.MaximumPrice?.value,
       MinimumPrice: form?.MinimumPrice?.value,
+      Details: form?.Details?.value,
       image: uploadedImage,
       agent: {
         name: user?.displayName,
         email: user?.email,
-        image:user?.photoURL,
+        image: user?.photoURL,
       },
-    }
+    };
 
     if (!uploadedImage) {
-      toast.error('Please upload an image')
-      return
+      toast.error("Please upload an image");
+      return;
     }
 
-    submitProperty(property)
-  }
+    submitProperty(property);
+  };
 
   return (
-    <div className='w-full min-h-screen flex items-center justify-center bg-gray-50 p-5'>
+    <div className="w-full min-h-screen flex items-center justify-center bg-gray-50 p-5">
       <form
-        id='add-property-form'
+        id="add-property-form"
         onSubmit={handleSubmit}
-        className='bg-white rounded-xl shadow-md p-8 w-full max-w-3xl space-y-6'
+        className="bg-white rounded-xl shadow-md p-8 w-full max-w-3xl space-y-6"
       >
-        <h2 className='text-2xl font-semibold text-center text-[#064d57]'>Add New Property</h2>
+        <h2 className="text-2xl font-semibold text-center text-[#064d57]">
+          Add New Property
+        </h2>
 
         {/* Property Title */}
         <div>
-          <label className='block text-sm font-medium text-gray-700'>Property Title</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Property Title
+          </label>
           <input
-            type='text'
-            name='title'
+            type="text"
+            name="title"
             required
-            className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
-            placeholder='Enter property title'
+            className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            placeholder="Enter property title"
           />
         </div>
 
         {/* Property Location */}
         <div>
-          <label className='block text-sm font-medium text-gray-700'>Property Location</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Property Location
+          </label>
           <input
-            type='text'
-            name='location'
+            type="text"
+            name="location"
             required
-            className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
-            placeholder='Enter location'
+            className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            placeholder="Enter location"
           />
         </div>
 
         {/* Property Image */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>Upload Property Image</label>
-          <div className='flex items-center gap-5'>
-            <label className='bg-[#064d57] text-white px-3 py-1 rounded-md cursor-pointer hover:bg-[#064d57]'>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Property Image
+          </label>
+          <div className="flex items-center gap-5">
+            <label className="bg-[#064d57] text-white px-3 py-1 rounded-md cursor-pointer hover:bg-[#064d57]">
               <input
                 onChange={handleImageUpload}
-                type='file'
-                accept='image/*'
+                type="file"
+                accept="image/*"
                 hidden
               />
               Upload
             </label>
-            {uploadedImage && <img src={uploadedImage} alt='Preview' className='w-24 rounded border' />}
+            {uploadedImage && (
+              <img
+                src={uploadedImage}
+                alt="Preview"
+                className="w-24 rounded border"
+              />
+            )}
           </div>
-          {imageUploadError && <p className='text-red-500 text-sm'>{imageUploadError}</p>}
+          {imageUploadError && (
+            <p className="text-red-500 text-sm">{imageUploadError}</p>
+          )}
+        </div>
+                {/* Price Range Minimum Price / Maximum Price  */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Maximum Price{" "}
+          </label>
+          <input
+            type="text"
+            name="MaximumPrice"
+            required
+            max={1000}
+            className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            placeholder="Maxi Price"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Minimum Price
+          </label>
+          <input
+            type="text"
+            name="MinimumPrice"
+            required
+            min={300}
+            className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            placeholder="Mini Price"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+           Details
+          </label>
+          <textarea
+            type="text"
+            name="Details"
+            required
+            rows={4}
+            className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            
+          />
         </div>
 
         {/* Agent Info */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Agent Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Agent Name
+            </label>
             <input
-              type='text'
-              value={user?.displayName || ''}
+              type="text"
+              value={user?.displayName || ""}
               readOnly
-              className='mt-1 w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md'
+              className="mt-1 w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md"
             />
           </div>
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Agent Email</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Agent Email
+            </label>
             <input
-              type='email'
-              value={user?.email || ''}
+              type="email"
+              value={user?.email || ""}
               readOnly
-              className='mt-1 w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md'
+              className="mt-1 w-full px-4 py-2 border border-gray-300 bg-gray-100 rounded-md"
             />
           </div>
         </div>
-
-        {/* Price Range Minimum Price / Maximum Price  */}
-        <div>
-          <label className='block text-sm font-medium text-gray-700'>Maximum Price </label>
-          <input
-            type='text'
-            name='MaximumPrice'
-            required
-            max={1000}
-            className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
-            placeholder='Maxi Price'
-          />
-        </div>
-
-        <div>
-          <label className='block text-sm font-medium text-gray-700'>Minimum Price</label>
-          <input
-            type='text'
-            name='MinimumPrice'
-            required
-            min={300}
-            className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
-            placeholder='Mini Price'
-          />
-        </div>
-
         {/* Submit Button */}
         <button
-          type='submit'
+          type="submit"
           disabled={isSubmitting}
-          className='w-full py-3 mt-3 bg-[#064d57] text-white font-semibold rounded-md hover:bg-[#064d57] transition'
+          className="w-full py-3 mt-3 bg-[#064d57] text-white font-semibold rounded-md hover:bg-[#064d57] transition"
         >
-          {isSubmitting ? 'Adding...' : 'Add Property'}
+          {isSubmitting ? "Adding..." : "Add Property"}
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddPropertyForm
+export default AddPropertyForm;

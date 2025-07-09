@@ -46,6 +46,7 @@ const NavBar = () => {
         <NavLink className="text-xl font-extrabold" to="/">
           Home
         </NavLink>
+        <br />
         <NavLink className="text-xl font-extrabold" to="/properties">
           All properties
         </NavLink>
