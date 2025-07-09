@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { imageUpload } from "../../../api/utils";
 
 const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
-  const { title, location, _id, image: oldImage } = property || {};
+  const { title, location, _id, image: oldImage,MinimumPrice,MaximumPrice } = property || {};
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const modalRef = useRef();
@@ -34,14 +34,13 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
         autoClose: 1500,
         transition: Bounce,
       });
-         window.location.reload();
+      window.location.reload();
       handleUpdateProperty?.(data);
-      
-      
-      
-      
-      
-      queryClient.invalidateQueries({ queryKey: ["myProperties"], refetchType: 'active' });
+
+      queryClient.invalidateQueries({
+        queryKey: ["myProperties"],
+        refetchType: "active",
+      });
       modalRef.current?.close();
       // Optionally force reload page or re-fetch other data here if needed
       // window.location.reload(); // Uncomment if you want full page reload
@@ -83,7 +82,7 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
     }
     if (imageUploadError) {
       toast.error("Please fix the image upload error before submitting.");
-      
+
       return;
     }
 
@@ -171,6 +170,28 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
                 required
               />
             </div>
+            {/* maxPrice */}
+            <div>
+              <label className="block font-medium">maxPrice</label>
+              <input
+                type="text"
+                name="MaximumPrice"
+                defaultValue={MaximumPrice}
+                className="input input-bordered w-full"
+                required
+              />
+            </div>
+            {/* maxPrice */}
+            <div>
+              <label className="block font-medium">maxPrice</label>
+              <input
+                type="text"
+                name="MinimumPrice"
+                defaultValue={MinimumPrice}
+                className="input input-bordered w-full"
+                required
+              />
+            </div>
 
             {/* Agent Info */}
             <div>
@@ -209,7 +230,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
                 type="button"
                 className="btn"
                 onClick={() => modalRef.current?.close()}
-               
               >
                 Cancel
               </button>
