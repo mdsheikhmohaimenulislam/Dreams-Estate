@@ -23,8 +23,6 @@ const MyAddProperties = () => {
     document.title = "My Properties List";
   }, [user]);
 
-
-
   // Deleted section
   const handleDeleted = (id) => {
     Swal.fire({
@@ -37,7 +35,7 @@ const MyAddProperties = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       // console.log(result);
-      // Start Deleted the marathon
+      // Start Deleted the Properties
 
       if (result.isConfirmed) {
         fetch(`${import.meta.env.VITE_API_URL}/properties/${id}`, {
@@ -49,22 +47,33 @@ const MyAddProperties = () => {
             if (data.deletedCount) {
               Swal.fire({
                 title: "Deleted!",
-                text: "Your marathon has been deleted.",
+                text: "Your Properties has been deleted.",
                 icon: "success",
               });
             }
             // filter section
-            const remainingMarathon = properties.filter(
-              (filterMarathon) => filterMarathon._id !== id
+            const remainingProperties = properties.filter(
+              (filterProperties) => filterProperties._id !== id
             );
-            setProperties(remainingMarathon);
+            setProperties(remainingProperties);
           });
       }
     });
   };
 
 
-//   
+
+
+
+
+  // Ui update
+  const handleUpdateMarathon = (updatedMarathon) => {
+    const updatedList = properties.map((marathon) =>
+      marathon._id === updatedMarathon._id ? updatedMarathon : marathon
+    );
+    setProperties(updatedList);
+  };
+
 
 
 
@@ -77,6 +86,7 @@ const MyAddProperties = () => {
             key={property?._id}
             property={property}
             handleDeleted={handleDeleted}
+          handleUpdateMarathon={handleUpdateMarathon}
           />
         ))}
       </div>

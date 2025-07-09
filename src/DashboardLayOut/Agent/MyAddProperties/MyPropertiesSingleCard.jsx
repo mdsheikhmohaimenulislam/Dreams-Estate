@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import UpdateMyProperties from "./UpdateMyProperties";
 
-const MyPropertiesSingleCard = ({ handleDeleted, property }) => {
+const MyPropertiesSingleCard = ({ handleDeleted, property, handleUpdateMarathon }) => {
   const {
     image,
     title,
@@ -35,7 +35,7 @@ const MyPropertiesSingleCard = ({ handleDeleted, property }) => {
         <div className="flex space-x-4">
           <img
             alt=""
-            src={property.agent.image}
+            src={property?.agent?.image}
             className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500"
           />
           <div className="flex flex-col space-y-1">
@@ -44,7 +44,7 @@ const MyPropertiesSingleCard = ({ handleDeleted, property }) => {
               href="#"
               className="text-sm font-semibold"
             >
-              {property.agent.name}
+              {property?.agent?.name}
             </a>
             {/* Verification Status */}
             <p
@@ -58,14 +58,13 @@ const MyPropertiesSingleCard = ({ handleDeleted, property }) => {
         </div>
         <div className="card-actions justify-end">
           <div className="flex gap-3 mt-2">
-            <UpdateMyProperties property={property} />
 
-            {/* <Link
-          to='update'
-              className="px-4 py-1 rounded bg-[#064d57] text-white "
-            >
-              Update
-            </Link> */}
+
+            <UpdateMyProperties handleUpdateMarathon={handleUpdateMarathon} property={property} />
+
+
+
+
             <button
               onClick={() => remove(_id)}
               className="px-4 py-1 rounded bg-red-500 text-white hover:bg-red-600"

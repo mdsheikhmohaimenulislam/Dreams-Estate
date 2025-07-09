@@ -1,114 +1,222 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast, Bounce } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
+import { imageUpload } from "../../../api/utils";
 
-const UpdateMyProperties = ({ property }) => {
+const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
+  const { title, location, _id, image: oldImage } = property || {};
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const modalRef = useRef();
 
-  const { image, title, location } = property || {};
+  const [uploadedImage, setUploadedImage] = useState(oldImage || "");
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  const { mutate: updateProperty, isLoading: isUpdating } = useMutation({
+    mutationFn: async ({ id, updatedProperty }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/properties/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedProperty),
+        }
+      );
+      const data = await res.json();
+      if (data.modifiedCount <= 0) throw new Error("Update failed");
+      return updatedProperty;
+    },
+    onSuccess: (data) => {
+      toast.success("Property updated successfully!", {
+        position: "top-right",
+        autoClose: 1500,
+        transition: Bounce,
+      });
+         window.location.reload();
+      handleUpdateProperty?.(data);
+      
+      
+      
+      
+      
+      queryClient.invalidateQueries({ queryKey: ["myProperties"], refetchType: 'active' });
+      modalRef.current?.close();
+      // Optionally force reload page or re-fetch other data here if needed
+      // window.location.reload(); // Uncomment if you want full page reload
+    },
+    onError: () => {
+      toast.error("Failed to update property");
+    },
+  });
+
+  const handleImageUpload = async (e) => {
+    const image = e.target.files[0];
+    if (!image) return;
+    setIsUploadingImage(true);
+    setImageUploadError(null);
+
+    try {
+      const url = await imageUpload(image);
+      setUploadedImage(url);
+      setImageUploadError(null);
+    } catch (err) {
+      console.error(err);
+      setImageUploadError("Image upload failed! Please try again.");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+
+    // Prevent submit if image is uploading or upload failed
+    if (isUploadingImage) {
+      toast.warn("Please wait for the image to finish uploading.");
+      return;
+    }
+    if (!uploadedImage) {
+      toast.error("Please upload an image before submitting.");
+      return;
+    }
+    if (imageUploadError) {
+      toast.error("Please fix the image upload error before submitting.");
+      
+      return;
+    }
+
+    const form = e.target;
+    const updatedProperty = {
+      title: form.title.value,
+      location: form.location.value,
+      image: uploadedImage,
+      agent: {
+        name: user?.displayName,
+        email: user?.email,
+        image: user?.photoURL,
+      },
+      updatedAt: new Date().toISOString(),
+    };
+
+    updateProperty({ id: _id, updatedProperty });
+  };
 
   return (
     <div>
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
       <button
-        className="px-4 py-1 rounded bg-[#064d57] text-white "
-        onClick={() => document.getElementById("my_modal_1").showModal()}
+        className="px-4 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+        onClick={() => modalRef.current?.showModal()}
       >
         Update
       </button>
 
-      {/* form section */}
-
-      <dialog id="my_modal_1" className="modal">
+      <dialog ref={modalRef} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">{property.agent.name}</p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
-            </form>
-          </div>
+          <form onSubmit={handleUpdate} className="space-y-4">
+            {/* Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Property Image
+              </label>
+              <div className="flex items-center gap-5">
+                <label
+                  className={`bg-[#064d57] text-white px-3 py-1 rounded-md cursor-pointer hover:bg-[#053d45] ${
+                    isUploadingImage ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <input
+                    onChange={handleImageUpload}
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    disabled={isUploadingImage}
+                  />
+                  {isUploadingImage ? "Uploading..." : "Upload"}
+                </label>
+                {uploadedImage && (
+                  <img
+                    src={uploadedImage}
+                    alt="Preview"
+                    className="w-24 rounded border"
+                  />
+                )}
+              </div>
+              {imageUploadError && (
+                <p className="text-red-500 text-sm mt-1">{imageUploadError}</p>
+              )}
+            </div>
+
+            {/* Title */}
+            <div>
+              <label className="block font-medium">Title</label>
+              <input
+                type="text"
+                name="title"
+                defaultValue={title}
+                className="input input-bordered w-full"
+                required
+              />
+            </div>
+
+            {/* Location */}
+            <div>
+              <label className="block font-medium">Location</label>
+              <input
+                type="text"
+                name="location"
+                defaultValue={location}
+                className="input input-bordered w-full"
+                required
+              />
+            </div>
+
+            {/* Agent Info */}
+            <div>
+              <label className="block font-medium">Agent Name</label>
+              <input
+                type="text"
+                value={user?.displayName || ""}
+                readOnly
+                className="input input-bordered w-full bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block font-medium">Agent Email</label>
+              <input
+                type="email"
+                value={user?.email || ""}
+                readOnly
+                className="input input-bordered w-full bg-gray-100"
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="modal-action">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isUpdating || isUploadingImage}
+              >
+                {isUpdating
+                  ? "Updating..."
+                  : isUploadingImage
+                  ? "Uploading Image..."
+                  : "Update Property"}
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => modalRef.current?.close()}
+               
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       </dialog>
-
-      <div className="mb-20">
-        <section className={` overflow-scroll table mb-20  `}>
-          <form
-            onSubmit={handleUpdate}
-            className="container overflow-hidden flex flex-col mx-auto space-y-12"
-          >
-            <div className="grid grid-cols-1 gap-6 mx-auto  rounded-md shadow-sm dark:bg-gray-50">
-              {/* 1 */}
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">Marathon Image</legend>
-                <input
-                  type="photoURL"
-                  name="photo"
-                  defaultValue={image}
-                  className="input"
-                  placeholder="Marathon Image URL"
-                />
-              </fieldset>
-              {/* 2 */}
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">Marathon Title</legend>
-                <input
-                  type="text"
-                  defaultValue={title}
-                  name="name"
-                  className="input"
-                  placeholder="Marathon Title"
-                />
-              </fieldset>
-              {/* 3 */}
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">Marathon Title</legend>
-                <input
-                  type="text"
-                  defaultValue={location}
-                  name="name"
-                  className="input"
-                  placeholder="Marathon Title"
-                />
-              </fieldset>
-              {/* 9 */}
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">User Name</legend>
-                <input
-                  readOnly
-                  type="text"
-                  name="displayName"
-                  value={user?.displayName || ""}
-                  className="input"
-                  placeholder="My awesome page"
-                />
-              </fieldset>
-              {/* 10 */}
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend">User Email</legend>
-                <input
-                  readOnly
-                  type="email"
-                  name="email"
-                  value={user?.email || ""}
-                  className="input"
-                  placeholder="My awesome page"
-                />
-              </fieldset>
-            </div>
-            <button type="submit" className="w-full btn text-2xl p-8 mb-20">
-              Update Marathon
-            </button>
-          </form>
-        </section>
-      </div>
-
-      {/* Close button */}
-      <div className="modal-action">
-        <label htmlFor="my_modal_6" className="btn">
-          Close!
-        </label>
-      </div>
     </div>
   );
 };

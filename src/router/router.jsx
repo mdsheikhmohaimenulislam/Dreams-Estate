@@ -10,6 +10,7 @@ import DashboardHome from "../DashboardLayOut/DashboardHome/DashboardHome";
 import Profile from "../DashboardLayOut/Common/Profile";
 import AddProperty from "../DashboardLayOut/Agent/AddProperty";
 import MyAddProperties from "../DashboardLayOut/Agent/MyAddProperties/MyAddProperties";
+import UpdateMyProperties from "../DashboardLayOut/Agent/MyAddProperties/UpdateMyProperties";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +62,12 @@ export const router = createBrowserRouter([
             <MyAddProperties/>
         </PrivateRouter>
       },
+{
+  path: 'updateProperty',
+//   loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/properties/${params.id}`),
+  element: <PrivateRouter><UpdateMyProperties /></PrivateRouter>,
+
+},
       {
         path: "profile",
         element: (
