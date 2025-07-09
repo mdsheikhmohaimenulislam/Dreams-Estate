@@ -9,6 +9,7 @@ import DashboardRoot from "../DashboardLayOut/DashboardRoot/DashboardRoot";
 import DashboardHome from "../DashboardLayOut/DashboardHome/DashboardHome";
 import Profile from "../DashboardLayOut/Common/Profile";
 import AddProperty from "../DashboardLayOut/Agent/AddProperty";
+import MyAddProperties from "../DashboardLayOut/Agent/MyAddProperties/MyAddProperties";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +54,12 @@ export const router = createBrowserRouter([
             <AddProperty />
           </PrivateRouter>
         ),
+      },
+      {
+        path:'myAddProperty',
+        element:<PrivateRouter>
+            <MyAddProperties/>
+        </PrivateRouter>
       },
       {
         path: "profile",

@@ -47,12 +47,13 @@ const AddPropertyForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const form = e.target
+    const form = e?.target
 
     const property = {
-      title: form.title.value,
-      location: form.location.value,
-      priceRange: form.priceRange.value,
+      title: form?.title?.value,
+      location: form?.location?.value,
+      MaximumPrice : form?.MaximumPrice?.value,
+      MinimumPrice: form?.MinimumPrice?.value,
       image: uploadedImage,
       agent: {
         name: user?.displayName,
@@ -142,15 +143,28 @@ const AddPropertyForm = () => {
           </div>
         </div>
 
-        {/* Price Range */}
+        {/* Price Range Minimum Price / Maximum Price  */}
         <div>
-          <label className='block text-sm font-medium text-gray-700'>Price Range</label>
+          <label className='block text-sm font-medium text-gray-700'>Maximum Price </label>
           <input
             type='text'
-            name='priceRange'
+            name='MaximumPrice'
             required
+            max={1000}
             className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
-            placeholder='e.g. $200 - $500'
+            placeholder='Maxi Price'
+          />
+        </div>
+
+        <div>
+          <label className='block text-sm font-medium text-gray-700'>Minimum Price</label>
+          <input
+            type='text'
+            name='MinimumPrice'
+            required
+            min={300}
+            className='mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]'
+            placeholder='Mini Price'
           />
         </div>
 

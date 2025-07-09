@@ -16,7 +16,7 @@ const AgentMenu = () => {
       <MenuItem
         icon={MdHouseSiding}
         label="My added properties"
-        address="myAddedProperties"
+        address="myAddProperty"
       />
       <MenuItem
         icon={ LuCircleDollarSign }
