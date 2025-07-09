@@ -6,6 +6,7 @@ import { RouterProvider } from "react-router";
 import { router } from "./router/router";
 import { ToastContainer } from "react-toastify";
 import ContextProvider from "./Context/ContextProvider/ContextProvider";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient();
 
@@ -15,9 +16,10 @@ createRoot(document.getElementById("root")).render(
 
       <ContextProvider>
         <RouterProvider router={router} />
+          <Toaster position="top-right" />
         <ToastContainer />
       </ContextProvider>
-      
+
     </QueryClientProvider>
   </StrictMode>
 );
