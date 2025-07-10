@@ -5,6 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
 import Review from "./Review/Review";
+import Wishlist from "./Review/Wishlist";
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -203,9 +204,7 @@ const PropertyDetails = () => {
                     </dialog>
 
                     {/* Add to Wishlist Button */}
-                    <button className="btn cursor-pointer bg-[#004d56] text-white ml-2">
-                      ❤️ Add to Wishlist
-                    </button>
+                    <Wishlist id={property._id} />
                   </div>
                 </div>
                 {/*  Description */}
