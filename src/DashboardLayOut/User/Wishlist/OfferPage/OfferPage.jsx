@@ -12,13 +12,14 @@ const OfferPage = () => {
   const {
     _id: propertyId,
     propertyName,
+    propertyImage,
     propertyLocation,
     agentName,
     MinimumPrice,
     MaximumPrice,
   } = property;
 
-  // ✅ Always ensure correct price range
+  //  Always ensure correct price range
   const priceMin = Math.min(parseInt(MinimumPrice), parseInt(MaximumPrice));
   const priceMax = Math.max(parseInt(MinimumPrice), parseInt(MaximumPrice));
 
@@ -51,6 +52,7 @@ const OfferPage = () => {
     const formData = new FormData(form);
     const values = Object.fromEntries(formData);
 
+    
     const offerAmount = Number(values.offer);
     if (offerAmount < priceMin || offerAmount > priceMax) {
       return toast.error(`Offer must be between ${priceMin} and ${priceMax}`);
@@ -58,6 +60,7 @@ const OfferPage = () => {
 
     const offerData = {
       propertyId,
+      propertyImage,
       propertyTitle: propertyName,
       location: propertyLocation,
       agentName,
@@ -77,7 +80,7 @@ const OfferPage = () => {
       <div>
         <form
           onSubmit={handleForm}
-          className="max-w-xl mx-auto bg-white shadow p-6 rounded space-y-4"
+          className="max-w-xl mx-auto mt-20 bg-white shadow p-6 rounded space-y-4"
         >
           <h2 className="text-xl font-bold mb-4">Submit Offer</h2>
 
