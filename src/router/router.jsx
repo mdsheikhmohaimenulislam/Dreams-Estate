@@ -14,6 +14,8 @@ import UpdateMyProperties from "../DashboardLayOut/Agent/MyAddProperties/UpdateM
 import OfferedProperties from "../DashboardLayOut/Agent/OfferedProperties/OfferedProperties";
 import DetailsPage from "../Home/AllProperties/DetailsPage";
 import Error from "../Home/Error/Error";
+import Wishlist from "../Home/AllProperties/Review/Wishlist";
+import UserWishlist from "../DashboardLayOut/User/Wishlist/UserWishlist";
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +64,7 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
+    //   Agent section
       {
         path: "addProperty",
         element: (
@@ -87,12 +90,12 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
-      {
-        path:"offers",
-        element:<PrivateRouter>
-            <OfferedProperties/>
-        </PrivateRouter>
-      },
+    //   {
+    //     path:"offers",
+    //     element:<PrivateRouter>
+    //         <OfferedProperties/>
+    //     </PrivateRouter>
+    //   },
       {
         path: "profile",
         element: (
@@ -101,6 +104,16 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
+
+    //   user section
+
+    {
+        path:"wishlist",
+        element:<PrivateRouter>
+            <UserWishlist/>
+        </PrivateRouter>
+    },
+
     ],
   },
 ]);

@@ -25,38 +25,37 @@ const PropertyDetails = () => {
     MinimumPrice,
   } = property || {};
 
-useEffect(() => {
-  if (!id) return; // just stop effect, no return JSX
+  useEffect(() => {
+    if (!id) return; // just stop effect, no return JSX
 
-  const fetchPropertyAndReviews = async () => {
-    try {
-      const resProperty = await fetch(
-        `${import.meta.env.VITE_API_URL}/properties/${id}`
-      );
+    const fetchPropertyAndReviews = async () => {
+      try {
+        const resProperty = await fetch(
+          `${import.meta.env.VITE_API_URL}/properties/${id}`
+        );
 
-      if (!resProperty.ok) {
+        if (!resProperty.ok) {
+          navigate("/not-found");
+          return;
+        }
+
+        const dataProperty = await resProperty.json();
+        setProperty(dataProperty);
+      } catch (error) {
+        console.error("Failed to fetch property or reviews:", error);
         navigate("/not-found");
-        return;
       }
+    };
 
-      const dataProperty = await resProperty.json();
-      setProperty(dataProperty);
-    } catch (error) {
-      console.error("Failed to fetch property or reviews:", error);
-      navigate("/not-found");
-    }
-  };
-
-  fetchPropertyAndReviews();
-  document.title = "DetailsPage";
-}, [id, navigate]);
-
+    fetchPropertyAndReviews();
+    document.title = "DetailsPage";
+  }, [id, navigate]);
 
   if (!property) {
     return <div>Loading...</div>;
   }
 
-//   console.log(property._id);
+  //   console.log(property._id);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -64,8 +63,8 @@ useEffect(() => {
       await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, {
         userName: user?.displayName,
         userEmail: user?.email,
-        propertyTitle:property.title,
-        agentName:property.agent.name,
+        propertyTitle: property.title,
+        agentName: property.agent.name,
         propertyId: property._id,
         rating,
         comment: reviewText,
@@ -213,7 +212,7 @@ useEffect(() => {
                     </dialog>
 
                     {/* Add to Wishlist Button */}
-                    <Wishlist id={property._id} />
+                    <Wishlist property={property} id={property._id} />
                   </div>
                 </div>
                 {/*  Description */}
