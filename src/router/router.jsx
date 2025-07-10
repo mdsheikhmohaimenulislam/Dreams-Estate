@@ -13,9 +13,11 @@ import MyAddProperties from "../DashboardLayOut/Agent/MyAddProperties/MyAddPrope
 import UpdateMyProperties from "../DashboardLayOut/Agent/MyAddProperties/UpdateMyProperties";
 import OfferedProperties from "../DashboardLayOut/Agent/OfferedProperties/OfferedProperties";
 import DetailsPage from "../Home/AllProperties/DetailsPage";
+import Error from "../Home/Error/Error";
 
 export const router = createBrowserRouter([
   {
+    errorElement:<Error/>,
     path: "/",
     Component: Root,
     children: [

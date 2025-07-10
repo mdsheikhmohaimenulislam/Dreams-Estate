@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
@@ -9,6 +9,7 @@ import Wishlist from "./Review/Wishlist";
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [property, setProperty] = useState(null);
   const { user } = useAuth();
@@ -24,26 +25,32 @@ const PropertyDetails = () => {
     MinimumPrice,
   } = property || {};
 
-  useEffect(() => {
-    if (!id) return;
+useEffect(() => {
+  if (!id) return; // just stop effect, no return JSX
 
-    const fetchPropertyAndReviews = async () => {
-      try {
-        // Fetch property details
-        const resProperty = await fetch(
-          `${import.meta.env.VITE_API_URL}/properties/${id}`
-        );
-        const dataProperty = await resProperty.json();
-        setProperty(dataProperty);
-      } catch (error) {
-        console.error("Failed to fetch property or reviews:", error);
+  const fetchPropertyAndReviews = async () => {
+    try {
+      const resProperty = await fetch(
+        `${import.meta.env.VITE_API_URL}/properties/${id}`
+      );
+
+      if (!resProperty.ok) {
+        navigate("/not-found");
+        return;
       }
-    };
 
-    fetchPropertyAndReviews();
+      const dataProperty = await resProperty.json();
+      setProperty(dataProperty);
+    } catch (error) {
+      console.error("Failed to fetch property or reviews:", error);
+      navigate("/not-found");
+    }
+  };
 
-    document.title = "DetailsPage";
-  }, [id]);
+  fetchPropertyAndReviews();
+  document.title = "DetailsPage";
+}, [id, navigate]);
+
 
   if (!property) {
     return <div>Loading...</div>;
