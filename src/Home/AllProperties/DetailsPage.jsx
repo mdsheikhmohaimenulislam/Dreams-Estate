@@ -56,7 +56,7 @@ useEffect(() => {
     return <div>Loading...</div>;
   }
 
-  console.log(property._id);
+//   console.log(property._id);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -64,6 +64,8 @@ useEffect(() => {
       await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, {
         userName: user?.displayName,
         userEmail: user?.email,
+        propertyTitle:property.title,
+        agentName:property.agent.name,
         propertyId: property._id,
         rating,
         comment: reviewText,
