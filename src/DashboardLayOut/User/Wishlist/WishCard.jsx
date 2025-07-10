@@ -1,6 +1,7 @@
+import { Link } from "react-router";
 import WishRemove from "./WishRemove";
 
-const WishCard = ({ wish, handleRemove }) => {
+const WishCard = ({ wish, handleRemove}) => {
   const {
     MaximumPrice,
     MinimumPrice,
@@ -16,6 +17,7 @@ const WishCard = ({ wish, handleRemove }) => {
 
   const convertDate = new Date(createdAt).toLocaleDateString();
 
+  
   return (
     <div>
       <div className="card bg-base-100 shadow-sm">
@@ -59,9 +61,13 @@ const WishCard = ({ wish, handleRemove }) => {
           </div>
           <div className="card-actions justify-end">
             <div className="flex gap-3 mt-2">
-              <button className="btn rounded bg-red-500 text-white hover:bg-red-600">
-                Delete
-              </button>
+              <Link
+              state={{ property: wish }}
+               to={"/dashboard/offerPage"}
+                className="btn rounded bg-[#004d56] text-white"
+              >
+                Make Offer
+              </Link>
               <WishRemove id={_id} handleRemove={handleRemove} />
             </div>
           </div>

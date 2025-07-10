@@ -11,11 +11,11 @@ import Profile from "../DashboardLayOut/Common/Profile";
 import AddProperty from "../DashboardLayOut/Agent/AddProperty";
 import MyAddProperties from "../DashboardLayOut/Agent/MyAddProperties/MyAddProperties";
 import UpdateMyProperties from "../DashboardLayOut/Agent/MyAddProperties/UpdateMyProperties";
-import OfferedProperties from "../DashboardLayOut/Agent/OfferedProperties/OfferedProperties";
 import DetailsPage from "../Home/AllProperties/DetailsPage";
 import Error from "../Home/Error/Error";
 import Wishlist from "../Home/AllProperties/Review/Wishlist";
 import UserWishlist from "../DashboardLayOut/User/Wishlist/UserWishlist";
+import OfferPage from "../DashboardLayOut/User/Wishlist/OfferPage/OfferPage";
 
 export const router = createBrowserRouter([
   {
@@ -90,12 +90,7 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
-    //   {
-    //     path:"offers",
-    //     element:<PrivateRouter>
-    //         <OfferedProperties/>
-    //     </PrivateRouter>
-    //   },
+
       {
         path: "profile",
         element: (
@@ -111,6 +106,12 @@ export const router = createBrowserRouter([
         path:"wishlist",
         element:<PrivateRouter>
             <UserWishlist/>
+        </PrivateRouter>
+    },
+    {
+        path:"offerPage",
+        element:<PrivateRouter>
+            <OfferPage/>
         </PrivateRouter>
     },
 
