@@ -1,17 +1,15 @@
 import React from "react";
+import { Link } from "react-router";
 
 const BoughtSingleCard = ({ data }) => {
-  const { propertyTitle, location, agentName, offerAmount, propertyImage } =
+  const { propertyTitle, location, agentName, offerAmount, propertyImage,pending } =
     data || {};
 
   return (
     <div className="card bg-base-100 mt-20 shadow-sm">
       <div>
         <figure>
-          <img
-            src={propertyImage}
-            alt={propertyTitle}
-          />
+          <img src={propertyImage} alt={propertyTitle} />
         </figure>
       </div>
       <div className="card-body">
@@ -26,12 +24,26 @@ const BoughtSingleCard = ({ data }) => {
           <p className="text-sm md:text-base text-gray-600 mb-1">
             <strong>Agent:</strong> {agentName || "Unknown"}
           </p>
-          <p className="text-sm md:text-base font-semibold text-green-600">
+          <p className="text-sm mb-2 md:text-base font-semibold text-green-600">
             Offer Amount: ${offerAmount?.toLocaleString() || "N/A"}
+          </p>
+          {/* Verification Status */}
+          <p
+            className={`text-sm font-semibold ${
+              pending ? "text-green-600" : "text-yellow-500"
+            }`}
+          >
+            {pending ? " Verified" : " Pending"}
           </p>
         </div>
         <div className="card-actions justify-end">
-          <button className="btn bg-[#004d56] text-white">Pay</button>
+          <Link
+            to="/dashboard/PaymentPage"
+            state={data}
+            className="btn bg-green-500 text-white"
+          >
+            Purchase
+          </Link>
         </div>
       </div>
     </div>

@@ -150,7 +150,7 @@ const OfferPage = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="btn btn-primary w-full"
+            className="btn bg-[#004d56] text-white w-full"
           >
             {isPending ? "Submitting..." : "Offer"}
           </button>

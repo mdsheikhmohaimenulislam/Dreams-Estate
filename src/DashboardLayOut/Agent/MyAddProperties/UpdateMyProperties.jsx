@@ -105,7 +105,7 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
   return (
     <div>
       <button
-        className="px-4 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+        className="px-4 py-1 rounded bg-green-500 text-white "
         onClick={() => modalRef.current?.showModal()}
       >
         Update
@@ -217,7 +217,7 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
             <div className="modal-action">
               <button
                 type="submit"
-                className="btn btn-primary"
+                className="btn bg-[#004d56] text-white"
                 disabled={isUpdating || isUploadingImage}
               >
                 {isUpdating

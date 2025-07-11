@@ -17,6 +17,7 @@ import Wishlist from "../Home/AllProperties/Review/Wishlist";
 import UserWishlist from "../DashboardLayOut/User/Wishlist/UserWishlist";
 import OfferPage from "../DashboardLayOut/User/Wishlist/OfferPage/OfferPage";
 import PropertyBought from "../DashboardLayOut/User/PropertyBought/PropertyBought";
+import PaymentPage from "../DashboardLayOut/User/PropertyBought/PaymentPage";
 
 export const router = createBrowserRouter([
   {
@@ -119,6 +120,12 @@ export const router = createBrowserRouter([
         path:"propertyBought",
         element:<PrivateRouter>
             <PropertyBought/>
+        </PrivateRouter>
+    },
+    {
+        path:"paymentPage",
+        element:<PrivateRouter>
+            <PaymentPage/>
         </PrivateRouter>
     },
 
