@@ -18,6 +18,8 @@ import AgentStatistic from '../AgentStatistic/AgentStatistic'
 import UserMenu from '../Menu/UserMenu'
 import AgentMenu from '../Menu/AgentMenu'
 import AdminMenu from '../Menu/AdminMenu'
+import MenuItem from '../Menu/MenuItem'
+import { FcSettings } from 'react-icons/fc'
 const Sidebar = () => {
   const { logOut } = useAuth()
   const [isActive, setActive] = useState(false)
@@ -96,11 +98,11 @@ const Sidebar = () => {
         <div>
           <hr />
 
-          {/* <MenuItem
+          <MenuItem
             icon={FcSettings}
             label='Profile'
             address='/dashboard/profile'
-          /> */}
+          />
           <button
             onClick={logOut}
             className='flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'

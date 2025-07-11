@@ -16,7 +16,7 @@ const UserMenu = () => {
 
   return (
     <>
-      <MenuItem icon={FaUser} label="My Profile" address="profile" />
+      
       <MenuItem icon={FaHeart} label="Wishlist" address="wishlist" />
       <MenuItem icon={FaHome} label="Property bought" address="PropertyBought" />
       <MenuItem icon={MdRateReview} label="My reviews" address="myReviews" />

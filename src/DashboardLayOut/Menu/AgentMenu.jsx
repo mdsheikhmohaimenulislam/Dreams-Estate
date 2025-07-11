@@ -7,11 +7,11 @@ import MenuItem from "./MenuItem";
 const AgentMenu = () => {
   return (
     <>
-      <MenuItem
+      {/* <MenuItem
         icon={FaUserTie }
         label="Agent Profile"
         address="agentProfile"
-      />
+      /> */}
       <MenuItem icon={FaPlusSquare} label="Add Property" address="addProperty" />
       <MenuItem
         icon={MdHouseSiding}

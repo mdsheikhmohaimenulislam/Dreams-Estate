@@ -6,7 +6,7 @@ import { FaStarHalfAlt } from "react-icons/fa";
 const AdminMenu = () => {
   return (
     <>
-      <MenuItem icon={RiAdminFill} label='Admin Profile' address='adminProfile' />
+      {/* <MenuItem icon={RiAdminFill} label='Admin Profile' address='adminProfile' /> */}
       <MenuItem icon={FaUserCog} label='Manage Properties' address='manageProperties' />
       <MenuItem icon={FaUsersCog } label='Manage Users' address='manageUsers' />
       <MenuItem icon={FaStarHalfAlt} label='Manage reviews' address='manageReviews' />
