@@ -18,6 +18,7 @@ import UserWishlist from "../DashboardLayOut/User/Wishlist/UserWishlist";
 import OfferPage from "../DashboardLayOut/User/Wishlist/OfferPage/OfferPage";
 import PropertyBought from "../DashboardLayOut/User/PropertyBought/PropertyBought";
 import PaymentPage from "../DashboardLayOut/User/PropertyBought/PaymentPage";
+import MyReviews from "../DashboardLayOut/User/MyReviews";
 
 export const router = createBrowserRouter([
   {
@@ -127,6 +128,12 @@ export const router = createBrowserRouter([
         element:<PrivateRouter>
             <PaymentPage/>
         </PrivateRouter>
+    },
+    {
+      path:"myReviews",
+      element:<PrivateRouter>
+        <MyReviews/>
+      </PrivateRouter>
     },
 
     ],

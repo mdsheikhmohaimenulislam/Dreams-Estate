@@ -90,7 +90,7 @@ if (result?.paymentIntent?.status === 'succeeded') {
     }
   } catch (err) {
     console.log(err);
-    toast.error('Failed to place order');
+    toast.error('You have already added a parcel');
   } finally {
     setProcessing(false);
     setCardError(null);

@@ -12,7 +12,9 @@ const Review = ({ id }) => {
 
     const fetchReviews = async () => {
       try {
-        const resReviews = await axios.get(`${import.meta.env.VITE_API_URL}/reviews/${id}`);
+        const resReviews = await axios.get(
+          `${import.meta.env.VITE_API_URL}/reviews/${id}`
+        );
         setReviews(resReviews.data || []);
       } catch (error) {
         console.error("Failed to fetch reviews:", error);
@@ -22,56 +24,61 @@ const Review = ({ id }) => {
     fetchReviews();
   }, [id]);
 
-const handleDelete = async (reviewId) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
-  });
-
-  if (!result.isConfirmed) return;
-
-  try {
-    await axios.delete(`${import.meta.env.VITE_API_URL}/reviews/${reviewId}`, {
-      data: { userEmail: user.email }, // verify ownership on backend
+  const handleDelete = async (reviewId) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     });
 
-    // Remove from state
-    setReviews((prev) => prev.filter((r) => r._id !== reviewId));
+    if (!result.isConfirmed) return;
 
-    // Show success
-    Swal.fire({
-      title: "Deleted!",
-      text: "Your review has been deleted.",
-      icon: "success"
-    });
-  } catch (error) {
-    console.error("Failed to delete review:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: "Failed to delete review.",
-    });
-  }
-};
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+        {
+          data: { userEmail: user.email }, // verify ownership on backend
+        }
+      );
+
+      // Remove from state
+      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
+
+      // Show success
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your review has been deleted.",
+        icon: "success",
+      });
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to delete review.",
+      });
+    }
+  };
 
   return (
     <div className="mb-6 text-center w-2/ mx-auto">
       <h2 className="text-xl font-semibold text-gray-800 mb-3">User Reviews</h2>
 
       {reviews.length === 0 ? (
-        <p className="text-gray-600">No reviews yet. Be the first to leave one!</p>
+        <p className="text-gray-600">
+          No reviews yet. Be the first to leave one!
+        </p>
       ) : (
         <div className="space-y-4">
           {reviews.map((review, idx) => (
-            <div key={idx} className="bg-gray-100 p-4 rounded shadow text-left relative">
-              <p className="text-gray-800 font-medium">
-                {review.userEmail || review.userName || "Anonymous"}
-              </p>
+            <div
+              key={idx}
+              className="bg-gray-100 p-4 rounded shadow text-left relative"
+            >
               {/* Stars */}
               <div className="flex text-yellow-400 mb-1">
                 {[...Array(5)].map((_, i) => (
@@ -92,6 +99,9 @@ const handleDelete = async (reviewId) => {
                   </svg>
                 ))}
               </div>
+              <p className="text-gray-800 font-medium">
+                {review.userEmail || review.userName || "Anonymous"}
+              </p>
               <p className="text-gray-600 text-sm">{review.comment}</p>
               <p className="text-xs text-gray-400 mt-1">
                 {new Date(review.createdAt).toLocaleDateString()}
