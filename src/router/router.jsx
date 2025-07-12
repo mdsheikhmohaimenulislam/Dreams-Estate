@@ -20,6 +20,7 @@ import PropertyBought from "../DashboardLayOut/User/PropertyBought/PropertyBough
 import PaymentPage from "../DashboardLayOut/User/PropertyBought/PaymentPage";
 import MyReviews from "../DashboardLayOut/User/MyReviews";
 import MySoldProperties from "../DashboardLayOut/Agent/MySoldProperties";
+import RequestedProperties from "../DashboardLayOut/Agent/RequestedProperties";
 
 export const router = createBrowserRouter([
   {
@@ -106,6 +107,11 @@ export const router = createBrowserRouter([
             <MySoldProperties />
           </PrivateRouter>
         ),
+      },
+      {path:"Requested",
+        element:<PrivateRouter>
+          <RequestedProperties/>
+        </PrivateRouter>
       },
       {
         path: "profile",

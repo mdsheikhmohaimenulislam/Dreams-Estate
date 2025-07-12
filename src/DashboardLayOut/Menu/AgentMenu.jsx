@@ -26,7 +26,7 @@ const AgentMenu = () => {
       <MenuItem
         icon={SiMinutemailer}
         label="Requested properties"
-        address="offers"
+        address="requested"
       />
     </>
   );
