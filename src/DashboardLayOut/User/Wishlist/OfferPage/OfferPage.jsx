@@ -19,6 +19,8 @@ const OfferPage = () => {
     MaximumPrice,
   } = property;
 
+  console.log(property);
+
   //  Always ensure correct price range
   const priceMin = Math.min(parseInt(MinimumPrice), parseInt(MaximumPrice));
   const priceMax = Math.max(parseInt(MinimumPrice), parseInt(MaximumPrice));
@@ -52,7 +54,6 @@ const OfferPage = () => {
     const formData = new FormData(form);
     const values = Object.fromEntries(formData);
 
-    
     const offerAmount = Number(values.offer);
     if (offerAmount < priceMin || offerAmount > priceMax) {
       return toast.error(`Offer must be between ${priceMin} and ${priceMax}`);
@@ -64,6 +65,7 @@ const OfferPage = () => {
       propertyTitle: propertyName,
       location: propertyLocation,
       agentName,
+      agentEmail: property?.agentEmail,
       offerAmount,
       buyerEmail: user?.email,
       buyerName: user?.displayName,

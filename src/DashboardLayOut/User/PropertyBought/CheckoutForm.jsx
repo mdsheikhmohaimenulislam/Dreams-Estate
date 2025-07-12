@@ -21,6 +21,7 @@ const CheckoutForm = ({ data: orderData }) => {
       const { data } = await axiosSecure.post("/create-paymentSecret", {
         price: orderData?.offerAmount,
         orderPropertyId: orderData?._id,
+        agentEmail: orderData?.agentEmail,
       });
 
       setClientSecret(data?.clientSecret);
@@ -75,28 +76,27 @@ const CheckoutForm = ({ data: orderData }) => {
       },
     });
 
-if (result?.error) {
-  setCardError(result.error.message);
-  return;
-}
-
-if (result?.paymentIntent?.status === 'succeeded') {
-  orderData.transactionId = result.paymentIntent.id;
-  try {
-    const { data } = await axiosSecure.post('/order', orderData);
-    console.log(data);
-    if (data?.insertedId) {
-      toast.success('Order Placed Successfully!');
+    if (result?.error) {
+      setCardError(result.error.message);
+      return;
     }
-  } catch (err) {
-    console.log(err);
-    toast.error('You have already added a parcel');
-  } finally {
-    setProcessing(false);
-    setCardError(null);
-  }
-}
 
+    if (result?.paymentIntent?.status === "succeeded") {
+      orderData.transactionId = result.paymentIntent.id;
+      try {
+        const { data } = await axiosSecure.post("/order", orderData);
+        console.log(data);
+        if (data?.insertedId) {
+          toast.success("Order Placed Successfully!");
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error("You have already added a parcel");
+      } finally {
+        setProcessing(false);
+        setCardError(null);
+      }
+    }
   };
 
   return (

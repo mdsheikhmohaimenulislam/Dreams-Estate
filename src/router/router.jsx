@@ -19,10 +19,11 @@ import OfferPage from "../DashboardLayOut/User/Wishlist/OfferPage/OfferPage";
 import PropertyBought from "../DashboardLayOut/User/PropertyBought/PropertyBought";
 import PaymentPage from "../DashboardLayOut/User/PropertyBought/PaymentPage";
 import MyReviews from "../DashboardLayOut/User/MyReviews";
+import MySoldProperties from "../DashboardLayOut/Agent/MySoldProperties";
 
 export const router = createBrowserRouter([
   {
-    errorElement:<Error/>,
+    errorElement: <Error />,
     path: "/",
     Component: Root,
     children: [
@@ -33,17 +34,22 @@ export const router = createBrowserRouter([
 
       {
         path: "/properties",
-       element:<PrivateRouter>
-        <AllProperties/>
-       </PrivateRouter>
+        element: (
+          <PrivateRouter>
+            <AllProperties />
+          </PrivateRouter>
+        ),
       },
 
       {
         path: "/DetailsPage/:id",
-         loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/properties/${params.id}`),
-       element:<PrivateRouter>
-        <DetailsPage/>
-       </PrivateRouter>
+        loader: ({ params }) =>
+          fetch(`${import.meta.env.VITE_API_URL}/properties/${params.id}`),
+        element: (
+          <PrivateRouter>
+            <DetailsPage />
+          </PrivateRouter>
+        ),
       },
 
       { path: "/login", Component: Login },
@@ -67,7 +73,7 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
-    //   Agent section
+      //   Agent section
       {
         path: "addProperty",
         element: (
@@ -93,7 +99,14 @@ export const router = createBrowserRouter([
           </PrivateRouter>
         ),
       },
-
+      {
+        path: "soldProperties",
+        element: (
+          <PrivateRouter>
+            <MySoldProperties />
+          </PrivateRouter>
+        ),
+      },
       {
         path: "profile",
         element: (
@@ -103,39 +116,48 @@ export const router = createBrowserRouter([
         ),
       },
 
-    //   user section
+      //   user section
 
-    {
-        path:"wishlist",
-        element:<PrivateRouter>
-            <UserWishlist/>
-        </PrivateRouter>
-    },
-    {
-        path:"offerPage",
-        element:<PrivateRouter>
-            <OfferPage/>
-        </PrivateRouter>
-    },
-    {
-        path:"propertyBought",
-        element:<PrivateRouter>
-            <PropertyBought/>
-        </PrivateRouter>
-    },
-    {
-        path:"paymentPage",
-        element:<PrivateRouter>
-            <PaymentPage/>
-        </PrivateRouter>
-    },
-    {
-      path:"myReviews",
-      element:<PrivateRouter>
-        <MyReviews/>
-      </PrivateRouter>
-    },
-
+      {
+        path: "wishlist",
+        element: (
+          <PrivateRouter>
+            <UserWishlist />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "offerPage",
+        element: (
+          <PrivateRouter>
+            <OfferPage />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "propertyBought",
+        element: (
+          <PrivateRouter>
+            <PropertyBought />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "paymentPage",
+        element: (
+          <PrivateRouter>
+            <PaymentPage />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "myReviews",
+        element: (
+          <PrivateRouter>
+            <MyReviews />
+          </PrivateRouter>
+        ),
+      },
     ],
   },
 ]);

@@ -21,7 +21,7 @@ const AgentMenu = () => {
       <MenuItem
         icon={ LuCircleDollarSign }
         label="My sold properties"
-        address="mySoldProperties"
+        address="soldProperties"
       />
       <MenuItem
         icon={SiMinutemailer}

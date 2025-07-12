@@ -29,6 +29,7 @@ const Wishlist = ({ id, property }) => {
         propertyName: property?.title,
         propertyLocation: property?.location,
         agentName: property?.agent.name,
+        agentEmail: property?.agent.email,
         agentImage: property?.agent.image,
         MaximumPrice: property?.MaximumPrice,
         MinimumPrice: property?.MinimumPrice,

@@ -25,6 +25,8 @@ const PropertyDetails = () => {
     MinimumPrice,
   } = property || {};
 
+  console.log(property);
+
   useEffect(() => {
     if (!id) return; // just stop effect, no return JSX
 
