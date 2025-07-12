@@ -51,6 +51,7 @@ const AddPropertyForm = () => {
       MinimumPrice: form?.MinimumPrice?.value,
       Details: form?.Details?.value,
       image: uploadedImage,
+      status: "pending",
       agent: {
         name: user?.displayName,
         email: user?.email,
@@ -132,7 +133,7 @@ const AddPropertyForm = () => {
             <p className="text-red-500 text-sm">{imageUploadError}</p>
           )}
         </div>
-                {/* Price Range Minimum Price / Maximum Price  */}
+        {/* Price Range Minimum Price / Maximum Price  */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Maximum Price{" "}
@@ -163,7 +164,7 @@ const AddPropertyForm = () => {
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-           Details
+            Details
           </label>
           <textarea
             type="text"
@@ -171,7 +172,6 @@ const AddPropertyForm = () => {
             required
             rows={4}
             className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
-            
           />
         </div>
 

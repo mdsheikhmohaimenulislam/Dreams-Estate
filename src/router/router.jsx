@@ -21,6 +21,7 @@ import PaymentPage from "../DashboardLayOut/User/PropertyBought/PaymentPage";
 import MyReviews from "../DashboardLayOut/User/MyReviews";
 import MySoldProperties from "../DashboardLayOut/Agent/MySoldProperties";
 import RequestedProperties from "../DashboardLayOut/Agent/RequestedProperties";
+import ManageProperties from "../DashboardLayOut/Admin/ManageProperties/ManageProperties";
 
 export const router = createBrowserRouter([
   {
@@ -163,6 +164,13 @@ export const router = createBrowserRouter([
             <MyReviews />
           </PrivateRouter>
         ),
+      },
+      // Admin section
+      {
+        path:"manageProperties",
+        element:<PrivateRouter>
+          <ManageProperties/>
+        </PrivateRouter>
       },
     ],
   },

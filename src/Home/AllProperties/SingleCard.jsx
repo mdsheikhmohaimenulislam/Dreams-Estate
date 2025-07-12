@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router";
 
 const SingleCard = ({ property }) => {
-  const { title, image, _id ,MinimumPrice, MaximumPrice, location ,isVerified} = property || {};
-
+  const { title, image, _id, MinimumPrice, MaximumPrice, location, status } =
+    property || {};
 
   return (
     <div>
@@ -36,17 +36,27 @@ const SingleCard = ({ property }) => {
                 {property?.agent?.name}
               </a>
               {/* Verification Status */}
-              <p
-              className={`text-sm font-semibold ${
-                isVerified ? "text-green-600" : "text-yellow-500"
-              }`}
-            >
-              {isVerified ? " Verified" : " Pending"}
-            </p>
+              <span
+                className={`px-2 py-1 text-center rounded-full text-white text-xs font-semibold
+                      ${
+                        status === "accepted"
+                          ? "bg-green-500"
+                          : status === "rejected"
+                          ? "bg-red-500"
+                          : "bg-yellow-500"
+                      }`}
+              >
+                {status}
+              </span>
             </div>
           </div>
         </div>
-            <Link to={`/DetailsPage/${_id}`} className="btn bg-[#064d57] text-white">details</Link>
+        <Link
+          to={`/DetailsPage/${_id}`}
+          className="btn bg-[#064d57] text-white"
+        >
+          details
+        </Link>
       </div>
     </div>
   );

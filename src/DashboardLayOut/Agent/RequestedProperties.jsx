@@ -70,7 +70,7 @@ const RequestedProperties = () => {
                 <td>{offer.buyerName}</td>
                 <td>${offer.offerAmount || 0}</td>
 
-                {/* ✅ Status Cell */}
+                {/* Status Cell */}
                 <td>
                   <span
                     className={`px-2 py-1 rounded-full text-white text-xs font-semibold
@@ -86,7 +86,7 @@ const RequestedProperties = () => {
                   </span>
                 </td>
 
-                {/* ✅ Action Buttons */}
+                {/* Action Buttons */}
                 <td>
                   {offer.status === "pending" && (
                     <div className="flex gap-2">
