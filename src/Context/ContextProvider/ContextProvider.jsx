@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   GithubAuthProvider,
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -13,9 +14,6 @@ import {
 import { auth } from "../../firebase/firebase";
 import { AuthContext } from "../AuthContext/AuthContext";
 import axios from "axios";
-
-
-
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -36,37 +34,31 @@ const ContextProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
+  // user deleted
+  const UserDelete = (user) => {
+    setLoading(true);
+    return deleteUser(user);
+  };
 
-
-
-//!that section use case
+  //!that section use case
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: photo,
-    })
-  }   
+    });
+  };
 
-
-
-
-
-
-
-
-
-// github login
-const githubLogin = () => {
-  setLoading(true);
-  return signInWithPopup(auth,githubProvider)
-}
-
-
-//   Google sign in 
-const googleHandle = () => {
+  // github login
+  const githubLogin = () => {
     setLoading(true);
-  return  signInWithPopup(auth,googleProvider);
-}
+    return signInWithPopup(auth, githubProvider);
+  };
+
+  //   Google sign in
+  const googleHandle = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
 
   //  logout
   const logOutHandle = () => {
@@ -74,27 +66,23 @@ const googleHandle = () => {
     return signOut(auth);
   };
 
-
-
   // currently signed-in user
-//   useEffect(() => {
-//     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-//       setUser(currentUser);
-//       setLoading(false);
-//     });
-//     return () => {
-//       unSubscribe();
-//     };
-//   }, []);
+  //   useEffect(() => {
+  //     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //       setUser(currentUser);
+  //       setLoading(false);
+  //     });
+  //     return () => {
+  //       unSubscribe();
+  //     };
+  //   }, []);
 
-
-
-    // onAuthStateChange
+  // onAuthStateChange
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async currentUser => {
-      console.log('CurrentUser-->', currentUser?.email)
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log("CurrentUser-->", currentUser?.email);
       if (currentUser?.email) {
-        setUser(currentUser)
+        setUser(currentUser);
 
         // Get JWT token
         await axios.post(
@@ -103,22 +91,19 @@ const googleHandle = () => {
             email: currentUser?.email,
           },
           { withCredentials: true }
-        )
+        );
       } else {
-        setUser(currentUser)
+        setUser(currentUser);
         await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
           withCredentials: true,
-        })
+        });
       }
-      setLoading(false)
-    })
+      setLoading(false);
+    });
     return () => {
-      return unsubscribe()
-    }
-  }, [])
-
-
-
+      return unsubscribe();
+    };
+  }, []);
 
   const userInfo = {
     user,
@@ -131,6 +116,7 @@ const googleHandle = () => {
     setUser,
     githubLogin,
     googleHandle,
+    UserDelete,
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;

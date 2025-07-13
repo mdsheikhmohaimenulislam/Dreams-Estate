@@ -8,9 +8,10 @@ import toast from "react-hot-toast";
 const AddPropertyForm = () => {
   const { user } = useAuth();
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
   const [imageUploadError, setImageUploadError] = useState(null);
 
-  const { mutate: submitProperty, isPending: isSubmitting } = useMutation({
+  const { mutate: submitProperty, isLoading: isSubmitting } = useMutation({
     mutationFn: async (propertyData) => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/add-properties`,
@@ -30,6 +31,7 @@ const AddPropertyForm = () => {
 
   const handleImageUpload = async (e) => {
     const image = e.target.files[0];
+    setImageUploading(true);
     try {
       const url = await imageUpload(image);
       setUploadedImage(url);
@@ -37,19 +39,21 @@ const AddPropertyForm = () => {
     } catch (err) {
       console.log(err);
       setImageUploadError("Image upload failed!");
+    } finally {
+      setImageUploading(false);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const form = e?.target;
+    const form = e.target;
 
     const property = {
-      title: form?.title?.value,
-      location: form?.location?.value,
-      MaximumPrice: form?.MaximumPrice?.value,
-      MinimumPrice: form?.MinimumPrice?.value,
-      Details: form?.Details?.value,
+      title: form.title.value,
+      location: form.location.value,
+      MaximumPrice: form.MaximumPrice.value,
+      MinimumPrice: form.MinimumPrice.value,
+      Details: form.Details.value,
       image: uploadedImage,
       status: "pending",
       agent: {
@@ -112,15 +116,21 @@ const AddPropertyForm = () => {
             Upload Property Image
           </label>
           <div className="flex items-center gap-5">
-            <label className="bg-[#064d57] text-white px-3 py-1 rounded-md cursor-pointer hover:bg-[#064d57]">
+            <label
+              className={`bg-[#064d57] text-white px-3 py-1 rounded-md cursor-pointer hover:bg-[#053c45] ${
+                imageUploading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
               <input
                 onChange={handleImageUpload}
                 type="file"
                 accept="image/*"
                 hidden
+                disabled={imageUploading}
               />
-              Upload
+              {imageUploading ? "Uploading..." : "Upload"}
             </label>
+
             {uploadedImage && (
               <img
                 src={uploadedImage}
@@ -133,18 +143,18 @@ const AddPropertyForm = () => {
             <p className="text-red-500 text-sm">{imageUploadError}</p>
           )}
         </div>
-        {/* Price Range Minimum Price / Maximum Price  */}
+
+        {/* Price Range */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Maximum Price{" "}
+            Maximum Price
           </label>
           <input
             type="text"
             name="MaximumPrice"
             required
-            max={1000}
             className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
-            placeholder="Maxi Price"
+            placeholder="Maximum Price"
           />
         </div>
 
@@ -156,22 +166,22 @@ const AddPropertyForm = () => {
             type="text"
             name="MinimumPrice"
             required
-            min={300}
             className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
-            placeholder="Mini Price"
+            placeholder="Minimum Price"
           />
         </div>
 
+        {/* Details */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Details
           </label>
           <textarea
-            type="text"
             name="Details"
             required
             rows={4}
             className="mt-1 w-full px-4 py-2 border border-[#064d57] rounded-md focus:outline-[#064d57]"
+            placeholder="Property details"
           />
         </div>
 
@@ -200,11 +210,12 @@ const AddPropertyForm = () => {
             />
           </div>
         </div>
+
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full py-3 mt-3 bg-[#064d57] text-white font-semibold rounded-md hover:bg-[#064d57] transition"
+          disabled={isSubmitting || imageUploading}
+          className="w-full py-3 mt-3 bg-[#064d57] text-white font-semibold rounded-md hover:bg-[#053c45] transition"
         >
           {isSubmitting ? "Adding..." : "Add Property"}
         </button>
