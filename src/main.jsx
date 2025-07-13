@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")).render(
       <ContextProvider>
         <RouterProvider router={router} />
           <Toaster position="top-right" />
-        <ToastContainer />
+        <ToastContainer position="top-right" />
       </ContextProvider>
 
     </QueryClientProvider>

@@ -6,10 +6,13 @@ import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
 import Review from "./Review/Review";
 import Wishlist from "./Review/Wishlist";
+import useUserroll from "../../hooks/userRoll";
+import LoadingSpinner from "../../Components/Shared/LoadingSpinner";
 
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [roll, isRollLoading] = useUserroll();
 
   const [property, setProperty] = useState(null);
   const { user } = useAuth();
@@ -82,6 +85,7 @@ const PropertyDetails = () => {
     }
   };
 
+  if (isRollLoading) return <LoadingSpinner />;
   return (
     <div>
       {/* Show more property details here */}
@@ -141,6 +145,7 @@ const PropertyDetails = () => {
                     {/* Reviews Button */}
                     {/* Open the modal using document.getElementById('ID').showModal() method */}
                     <button
+                      disabled={roll !== "user"}
                       className="btn cursor-pointer bg-[#004d56] text-white"
                       onClick={() =>
                         document.getElementById("my_modal_1").showModal()
@@ -214,7 +219,9 @@ const PropertyDetails = () => {
                     </dialog>
 
                     {/* Add to Wishlist Button */}
-                    <Wishlist property={property} id={property._id} />
+                  
+                      <Wishlist roll={roll} property={property} id={property._id} />
+     
                   </div>
                 </div>
                 {/*  Description */}

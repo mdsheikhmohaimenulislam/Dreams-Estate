@@ -1,10 +1,20 @@
 import React from "react";
 import { Link } from "react-router";
+import useUserroll from "../../../hooks/userRoll";
+import LoadingSpinner from "../../../Components/Shared/LoadingSpinner";
 
 const BoughtSingleCard = ({ data }) => {
-  const { propertyTitle, location, agentName, offerAmount, propertyImage,pending } =
-    data || {};
+  const {
+    propertyTitle,
+    location,
+    agentName,
+    offerAmount,
+    propertyImage,
+    pending,
+  } = data || {};
+  const [roll, isRollLoading] = useUserroll();
 
+  if (isRollLoading) return <LoadingSpinner />;
   return (
     <div className="card bg-base-100 mt-20 shadow-sm">
       <div>
@@ -37,13 +47,22 @@ const BoughtSingleCard = ({ data }) => {
           </p>
         </div>
         <div className="card-actions justify-end">
-          <Link
-            to="/dashboard/PaymentPage"
-            state={data}
-            className="btn bg-green-500 text-white"
-          >
-            Purchase
-          </Link>
+          {roll !== "user" ? (
+            <button
+              disabled={roll !== "user"}
+              className="btn bg-green-500 text-white hover:cursor-all-scroll"
+            >
+              Purchase
+            </button>
+          ) : (
+            <Link
+              to="/dashboard/PaymentPage"
+              state={data}
+              className="btn bg-green-500 text-white"
+            >
+              Purchase
+            </Link>
+          )}
         </div>
       </div>
     </div>

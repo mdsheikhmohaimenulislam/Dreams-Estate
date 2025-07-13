@@ -1,95 +1,97 @@
-import { useState } from 'react'
-import { GrLogout } from 'react-icons/gr'
+import { useState } from "react";
+import { GrLogout } from "react-icons/gr";
 // import { FcSettings } from 'react-icons/fc'
-import { AiOutlineBars } from 'react-icons/ai'
+import { AiOutlineBars } from "react-icons/ai";
 // import { BsGraphUp } from 'react-icons/bs'
 // import MenuItem from './Menu/MenuItem'
 
-
-
 // import AdminMenu from './Menu/AdminMenu'
-import { Link } from 'react-router'
+import { Link } from "react-router";
 // import SellerMenu from './Menu/SellerMenu'
 // import CustomerMenu from './Menu/CustomerMenu'
 // import logo from '../../../assets/images/logo-flat.png'
-import useAuth from '../../hooks/useAuth'
-import UserStatistic from '../UserStatistic/UserStatistic'
-import AgentStatistic from '../AgentStatistic/AgentStatistic'
-import UserMenu from '../Menu/UserMenu'
-import AgentMenu from '../Menu/AgentMenu'
-import AdminMenu from '../Menu/AdminMenu'
-import MenuItem from '../Menu/MenuItem'
-import { FcSettings } from 'react-icons/fc'
+import useAuth from "../../hooks/useAuth";
+import UserStatistic from "../UserStatistic/UserStatistic";
+import AgentStatistic from "../AgentStatistic/AgentStatistic";
+import UserMenu from "../Menu/UserMenu";
+import AgentMenu from "../Menu/AgentMenu";
+import AdminMenu from "../Menu/AdminMenu";
+import MenuItem from "../Menu/MenuItem";
+import { FcSettings } from "react-icons/fc";
+import useUserroll from "../../hooks/userRoll";
+import LoadingSpinner from "../../Components/Shared/LoadingSpinner";
+
 const Sidebar = () => {
-  const { logOut } = useAuth()
-  const [isActive, setActive] = useState(false)
+  const { logOut } = useAuth();
+  const [isActive, setActive] = useState(false);
+  const [roll, isRollLoading] = useUserroll();
 
   // Sidebar Responsive Handler
   const handleToggle = () => {
-    setActive(!isActive)
-  }
+    setActive(!isActive);
+  };
+
+  if (isRollLoading) return <LoadingSpinner />;
   return (
     <>
       {/* Small Screen Navbar */}
-      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden'>
+      <div className="bg-gray-100 text-gray-800 flex justify-between md:hidden">
         <div>
-          <div className='block cursor-pointer p-4 font-bold'>
-              <Link className='flex items-center font-extrabold' to='/'>
-                <img
-                  // className='hidden md:block'
-                  src='/logo.png'
-                  alt='logo'
-                  width='100'
-                  height='100'
-                />
-                
-                <h1>Dreams Estate</h1>
-              </Link>
+          <div className="block cursor-pointer p-4 font-bold">
+            <Link className="flex items-center font-extrabold" to="/">
+              <img
+                // className='hidden md:block'
+                src="/logo.png"
+                alt="logo"
+                width="100"
+                height="100"
+              />
+
+              <h1>Dreams Estate</h1>
+            </Link>
           </div>
         </div>
 
         <button
           onClick={handleToggle}
-          className='mobile-menu-button p-4 focus:outline-none focus:bg-gray-200'
+          className="mobile-menu-button p-4 focus:outline-none focus:bg-gray-200"
         >
-          <AiOutlineBars className='h-5 w-5' />
+          <AiOutlineBars className="h-5 w-5" />
         </button>
       </div>
 
       {/* Sidebar */}
       <div
         className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
+          isActive && "-translate-x-full"
         }  md:translate-x-0  transition duration-200 ease-in-out`}
       >
         <div>
           <div>
-            <div className='w-full  shadow-lg rounded-lg justify-center items-center bg-gray-200 mx-auto'>
-              <Link className='flex items-center font-extrabold' to='/'>
+            <div className="w-full  shadow-lg rounded-lg justify-center items-center bg-gray-200 mx-auto">
+              <Link className="flex items-center font-extrabold" to="/">
                 <img
                   // className='hidden md:block'
-                  src='/logo.png'
-                  alt='logo'
-                  width='100'
-                  height='100'
+                  src="/logo.png"
+                  alt="logo"
+                  width="100"
+                  height="100"
                 />
-                
+
                 <h1>Dreams Estate</h1>
               </Link>
             </div>
           </div>
 
           {/* Nav Items */}
-          <div className='flex flex-col justify-between flex-1 mt-6'>
+          <div className="flex flex-col justify-between flex-1 mt-6">
             <nav>
               {/*  Menu Items user or Agent or Admin menu*/}
-              <UserMenu/>
+              {roll === "user" && <UserMenu />}
 
+              {roll === "agent" && <AgentMenu />}
 
-              <AgentMenu/>
-
-
-              <AdminMenu/>
+              {roll === "admin" && <AdminMenu />}
               {/* <AdminMenu /> */}
             </nav>
           </div>
@@ -100,21 +102,22 @@ const Sidebar = () => {
 
           <MenuItem
             icon={FcSettings}
-            label='Profile'
-            address='/dashboard/profile'
+            roll={roll}
+            label="Profile"
+            address="/dashboard/profile"
           />
           <button
             onClick={logOut}
-            className='flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'
+            className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform"
           >
-            <GrLogout className='w-5 h-5' />
+            <GrLogout className="w-5 h-5" />
 
-            <span className='mx-4 font-medium'>Logout</span>
+            <span className="mx-4 font-medium">Logout</span>
           </button>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

@@ -4,7 +4,7 @@ import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-const Wishlist = ({ id, property }) => {
+const Wishlist = ({ id, property ,roll}) => {
   const { user } = useAuth();
   const [isAdded, setIsAdded] = useState(false);
 
@@ -52,7 +52,7 @@ const Wishlist = ({ id, property }) => {
   return (
     <div className="flex">
       <button
-        disabled={isAdded}
+        disabled={isAdded || roll !== "user"}
         onClick={handleAddToWishlist}
         className="btn cursor-pointer bg-[#004d56] text-white ml-2"
       >

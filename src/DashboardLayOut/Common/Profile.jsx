@@ -1,20 +1,21 @@
 import LoadingSpinner from "../../Components/Shared/LoadingSpinner"
 import useAuth from "../../hooks/useAuth"
-import useRole from "../../hooks/useRole"
+import useUserroll from "../../hooks/userRoll"
+// import useRole from "../../hooks/useRole"
 
 
 
 
 const Profile = () => {
   const { user } = useAuth  ()
-  // const [role, isRoleLoading] = useRole()
-  // if (isRoleLoading) return <LoadingSpinner />
+  const [roll, isRollLoading] = useUserroll()
+  if (isRollLoading) return <LoadingSpinner />
   return (
     <div className='flex justify-center items-center h-screen'>
       <div className='bg-white shadow-lg rounded-2xl md:w-4/5 lg:w-3/5'>
         <img
           alt='cover photo'
-        //   src={coverImg}
+          src="https://i.ibb.co/5gJDY6SC/edf5dccbce70efe5e11efe8b9dea9c22.jpg"
           className='w-full mb-4 rounded-t-lg h-56'
         />
         <div className='flex flex-col items-center justify-center p-4 -mt-16'>
@@ -27,7 +28,7 @@ const Profile = () => {
           </a>
 
           <p className='p-2 px-4 text-xs text-white bg-lime-500 rounded-full'>
-            {/* {role?.toUpperCase()} */}
+            {roll?.toUpperCase()}
           </p>
           <p className='mt-2 text-xl font-medium text-gray-800 '>
             User Id: {user.uid}
@@ -46,12 +47,12 @@ const Profile = () => {
               </p>
 
               <div>
-                <button className='bg-lime-500 px-10 py-1 rounded-lg text-black cursor-pointer hover:bg-lime-800 block mb-1'>
+                {/* <button className='bg-lime-500 px-10 py-1 rounded-lg text-black cursor-pointer hover:bg-lime-800 block mb-1'>
                   Update Profile
                 </button>
                 <button className='bg-lime-500 px-7 py-1 rounded-lg text-black cursor-pointer hover:bg-lime-800'>
                   Change Password
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

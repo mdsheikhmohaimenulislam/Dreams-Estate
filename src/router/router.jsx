@@ -22,6 +22,11 @@ import MyReviews from "../DashboardLayOut/User/MyReviews";
 import MySoldProperties from "../DashboardLayOut/Agent/MySoldProperties";
 import RequestedProperties from "../DashboardLayOut/Agent/RequestedProperties";
 import ManageProperties from "../DashboardLayOut/Admin/ManageProperties/ManageProperties";
+import ManageUsers from "../DashboardLayOut/Admin/ManageProperties/ManageUser/ManageUsers";
+import AdminPrivateRouter from "../Context/AdminPrivateRouter";
+import ManageReviews from "../DashboardLayOut/Admin/ManageReviews";
+import UserPrivateRouter from "../Context/UserPrivateRouter";
+import AgentPrivateRouter from "../Context/AgentPrivateRouter";
 
 export const router = createBrowserRouter([
   {
@@ -88,7 +93,9 @@ export const router = createBrowserRouter([
         path: "myAddProperty",
         element: (
           <PrivateRouter>
-            <MyAddProperties />
+            <AgentPrivateRouter>
+              <MyAddProperties />
+            </AgentPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -97,7 +104,9 @@ export const router = createBrowserRouter([
         //   loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/properties/${params.id}`),
         element: (
           <PrivateRouter>
-            <UpdateMyProperties />
+            <AgentPrivateRouter>
+              <UpdateMyProperties />
+            </AgentPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -105,14 +114,21 @@ export const router = createBrowserRouter([
         path: "soldProperties",
         element: (
           <PrivateRouter>
-            <MySoldProperties />
+            <AgentPrivateRouter>
+              <MySoldProperties />
+            </AgentPrivateRouter>
           </PrivateRouter>
         ),
       },
-      {path:"Requested",
-        element:<PrivateRouter>
-          <RequestedProperties/>
-        </PrivateRouter>
+      {
+        path: "Requested",
+        element: (
+          <PrivateRouter>
+            <AgentPrivateRouter>
+              <RequestedProperties />
+            </AgentPrivateRouter>
+          </PrivateRouter>
+        ),
       },
       {
         path: "profile",
@@ -129,7 +145,9 @@ export const router = createBrowserRouter([
         path: "wishlist",
         element: (
           <PrivateRouter>
-            <UserWishlist />
+            <UserPrivateRouter>
+              <UserWishlist />
+            </UserPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -137,7 +155,9 @@ export const router = createBrowserRouter([
         path: "offerPage",
         element: (
           <PrivateRouter>
-            <OfferPage />
+            <UserPrivateRouter>
+              <OfferPage />
+            </UserPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -145,7 +165,9 @@ export const router = createBrowserRouter([
         path: "propertyBought",
         element: (
           <PrivateRouter>
-            <PropertyBought />
+            <UserPrivateRouter>
+              <PropertyBought />
+            </UserPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -153,7 +175,9 @@ export const router = createBrowserRouter([
         path: "paymentPage",
         element: (
           <PrivateRouter>
-            <PaymentPage />
+            <UserPrivateRouter>
+              <PaymentPage />
+            </UserPrivateRouter>
           </PrivateRouter>
         ),
       },
@@ -161,16 +185,43 @@ export const router = createBrowserRouter([
         path: "myReviews",
         element: (
           <PrivateRouter>
-            <MyReviews />
+            <UserPrivateRouter>
+              <MyReviews />
+            </UserPrivateRouter>
           </PrivateRouter>
         ),
       },
       // Admin section
       {
-        path:"manageProperties",
-        element:<PrivateRouter>
-          <ManageProperties/>
-        </PrivateRouter>
+        path: "manageProperties",
+        element: (
+          <PrivateRouter>
+            <AdminPrivateRouter>
+              <ManageProperties />
+            </AdminPrivateRouter>
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "manageUsers",
+        element: (
+          <PrivateRouter>
+            <AdminPrivateRouter>
+              <ManageUsers />
+            </AdminPrivateRouter>
+          </PrivateRouter>
+        ),
+      },
+
+      {
+        path: "manageReviews",
+        element: (
+          <PrivateRouter>
+            <AdminPrivateRouter>
+              <ManageReviews />
+            </AdminPrivateRouter>
+          </PrivateRouter>
+        ),
       },
     ],
   },

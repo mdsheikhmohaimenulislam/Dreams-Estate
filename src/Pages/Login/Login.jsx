@@ -7,6 +7,7 @@ import { AuthContext } from "../../Context/AuthContext/AuthContext";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
+import { saveUserInDb } from "../../api/utils";
 
 const Login = () => {
   const {
@@ -19,7 +20,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showHide, setShowHide] = useState(false);
 
-  const loginHandleContent = (e) => {
+  const loginHandleContent = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
@@ -44,57 +45,58 @@ const Login = () => {
 
     setErrorMessage(""); // Clear errors before Firebase attempt
 
-    loginHandle(email, password)
-      .then(() => {
-        navigate(location?.state || "/");
-        toast.success("Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      })
-      .catch((error) => {
-        setErrorMessage(error.message);
-        toast.error("incarcerated password", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      });
+try {
+  const result = await loginHandle(email, password);
+
+  const userData = {
+    name: result?.user?.displayName,
+    email: result?.user?.email,
+    image: result?.user?.photoURL,
+  };
+
+  await saveUserInDb(userData); // <- MUST use await here
+
+  toast.success("Login successful!");
+  navigate(location?.state || "/");
+} catch (error) {
+  setErrorMessage(error.message);
+  toast.error("Login failed");
+}
   };
 
   // google set up
-  const googleSignInHandle = () => {
-    googleHandle()
-      .then(() => {
-        toast.success("Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+const googleSignInHandle = async () => {
+  try {
+    // 1. Google sign in
+    const result = await googleHandle();
+    console.log(" Google login result:", result);
 
-        navigate(location?.state || "/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+    const userData = {
+      name: result?.user?.displayName,
+      email: result?.user?.email,
+      image: result?.user?.photoURL,
+    };
+    console.log(" Extracted user data:", userData);
+
+    // 2. Save user to database
+    await saveUserInDb(userData); 
+  
+
+    // 3. Notify and navigate
+    toast.success("Login Successful");
+    navigate(location?.state || "/");
+  } catch (error) {
+    console.error("Google login or user save failed:", error);
+
+    if (error.response?.status === 409) {
+      // if user already exists
+      toast.info("User already exists");
+    } else {
+      toast.error("Something went wrong during login");
+    }
+  }
+};
+
 
   //   const githubHandle = () => {
   //     githubLogin()
