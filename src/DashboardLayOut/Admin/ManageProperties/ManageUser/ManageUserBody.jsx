@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 
-const ManageUserBody = ({ user, queryClient ,handleDeleted}) => {
+const ManageUserBody = ({ user, queryClient ,handleDeleted,isDeleting }) => {
   const axiosSecure = useAxiosSecure();
 
   const { mutate } = useMutation({
@@ -79,9 +79,10 @@ const ManageUserBody = ({ user, queryClient ,handleDeleted}) => {
 
         <button
           onClick={() => handleDeleted(user._id)}
-          className="px-2 py-1 rounded bg-gray-700 text-white cursor-pointer"
+          disabled={isDeleting}
+          className="btn bg-black text-white"
         >
-          Delete User
+          {isDeleting ? "Deleting..." : "Delete User"}
         </button>
       </td>
     </tr>

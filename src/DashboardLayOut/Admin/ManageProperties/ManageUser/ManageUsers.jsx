@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import LoadingSpinner from "../../../../Components/Shared/LoadingSpinner";
 import ManageUserBody from "./ManageUserBody";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosSecure } from "../../../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -14,21 +14,25 @@ const ManageUsers = () => {
       const { data } = await axiosSecure.get("/users");
       return data;
     },
-  onSuccess: () => {
-     queryClient.invalidateQueries(['user']) // refresh the user list
-  },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]); // refresh the user list
+    },
   });
 
-  const handleDeleted = async (userId) => {
-    try {
+  //  Use mutation hook at top level
+  const { mutate: handleDeleted, isLoading: isDeleting } = useMutation({
+    mutationFn: async (userId) => {
       await axios.delete(`${import.meta.env.VITE_API_URL}/user/${userId}`);
+    },
+    onSuccess: () => {
       toast.success("User deleted successfully");
-      // Refresh user list or update state
-    } catch (err) {
+      queryClient.invalidateQueries(["user"]);
+    },
+    onError: (error) => {
+      console.error(error);
       toast.error("Failed to delete user");
-      console.error(err);
-    }
-  };
+    },
+  });
 
   useEffect(() => {
     document.title = "ManageUsers";
@@ -58,7 +62,8 @@ const ManageUsers = () => {
               queryClient={queryClient}
               key={user._id}
               user={user}
-              handleDeleted={handleDeleted}
+            handleDeleted={handleDeleted} // Pass the mutate function here
+            isDeleting={isDeleting}  
             />
           ))}
         </tbody>

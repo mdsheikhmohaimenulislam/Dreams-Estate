@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import {
   createUserWithEmailAndPassword,
-  deleteUser,
   GithubAuthProvider,
   GoogleAuthProvider,
   onAuthStateChanged,
@@ -34,11 +33,7 @@ const ContextProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // user deleted
-  const UserDelete = (user) => {
-    setLoading(true);
-    return deleteUser(user);
-  };
+
 
   //!that section use case
   const updateUserProfile = (name, photo) => {
@@ -116,7 +111,7 @@ const ContextProvider = ({ children }) => {
     setUser,
     githubLogin,
     googleHandle,
-    UserDelete,
+
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;
