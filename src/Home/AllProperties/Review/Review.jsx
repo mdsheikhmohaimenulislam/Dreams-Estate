@@ -1,28 +1,58 @@
-import React, { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
+import useAuth from "../../../hooks/useAuth";
+
+const fetchReviews = async (propertyId) => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_URL}/reviews/${propertyId}`
+  );
+  return res.data;
+};
 
 const Review = ({ id }) => {
   const { user } = useAuth();
-  const [reviews, setReviews] = useState([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!id) return;
+  // Fetch reviews with React Query
+  const {
+    data: reviews = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["reviews", id],
+    queryFn: () => fetchReviews(id),
+    enabled: !!id,
+  });
 
-    const fetchReviews = async () => {
-      try {
-        const resReviews = await axios.get(
-          `${import.meta.env.VITE_API_URL}/reviews/${id}`
-        );
-        setReviews(resReviews.data || []);
-      } catch (error) {
-        console.error("Failed to fetch reviews:", error);
-      }
-    };
-
-    fetchReviews();
-  }, [id]);
+  // Mutation for deleting review
+  const deleteMutation = useMutation({
+    mutationFn: async (reviewId) => {
+      // If your backend expects userEmail as query param:
+      return axios.delete(
+        `${
+          import.meta.env.VITE_API_URL
+        }/reviews/${reviewId}?userEmail=${encodeURIComponent(user.email)}`
+      );
+    },
+    onSuccess: () => {
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your review has been deleted.",
+        icon: "success",
+      });
+      // Invalidate and refetch reviews
+      queryClient.invalidateQueries(["reviews", id]);
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Failed to delete review.",
+      });
+    },
+  });
 
   const handleDelete = async (reviewId) => {
     const result = await Swal.fire({
@@ -35,34 +65,13 @@ const Review = ({ id }) => {
       confirmButtonText: "Yes, delete it!",
     });
 
-    if (!result.isConfirmed) return;
-
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
-        {
-          data: { userEmail: user.email }, // verify ownership on backend
-        }
-      );
-
-      // Remove from state
-      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
-
-      // Show success
-      Swal.fire({
-        title: "Deleted!",
-        text: "Your review has been deleted.",
-        icon: "success",
-      });
-    } catch (error) {
-      console.error("Failed to delete review:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Failed to delete review.",
-      });
+    if (result.isConfirmed) {
+      deleteMutation.mutate(reviewId);
     }
   };
+
+  if (isLoading) return <p>Loading reviews...</p>;
+  if (isError) return <p>Failed to load reviews.</p>;
 
   return (
     <div className="mb-6 text-center w-2/ mx-auto">
@@ -74,9 +83,9 @@ const Review = ({ id }) => {
         </p>
       ) : (
         <div className="space-y-4">
-          {reviews.map((review, idx) => (
+          {reviews.map((review) => (
             <div
-              key={idx}
+              key={review._id}
               className="bg-gray-100 p-4 rounded shadow text-left relative"
             >
               {/* Stars */}
@@ -99,6 +108,7 @@ const Review = ({ id }) => {
                   </svg>
                 ))}
               </div>
+
               <p className="text-gray-800 font-medium">
                 {review.userEmail || review.userName || "Anonymous"}
               </p>
@@ -107,14 +117,15 @@ const Review = ({ id }) => {
                 {new Date(review.createdAt).toLocaleDateString()}
               </p>
 
-              {/* Delete button */}
+              {/* Delete button, only for review owner */}
               {user?.email === review.userEmail && (
                 <button
                   onClick={() => handleDelete(review._id)}
+                  disabled={deleteMutation.isLoading}
                   className="btn absolute top-2 right-2 border border-red-500 hover:text-red-800"
                   title="Delete review"
                 >
-                  deleted
+                  Delete
                 </button>
               )}
             </div>

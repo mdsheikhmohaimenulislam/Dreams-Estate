@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
 import { FaStar } from "react-icons/fa";
@@ -9,15 +10,58 @@ import Wishlist from "./Review/Wishlist";
 import useUserroll from "../../hooks/userRoll";
 import LoadingSpinner from "../../Components/Shared/LoadingSpinner";
 
+const fetchProperty = async (id) => {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/properties/${id}`);
+  if (!res.ok) throw new Error("Property not found");
+  return res.json();
+};
+
 const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [roll, isRollLoading] = useUserroll();
-
-  const [property, setProperty] = useState(null);
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(5);
+  console.log(reviewText);
+
+  const {
+    data: property,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["property", id],
+    queryFn: () => fetchProperty(id),
+    enabled: !!id,
+    onError: () => navigate("/not-found"),
+  });
+
+  const submitReviewMutation = useMutation({
+    mutationFn: (newReview) =>
+      axios.post(`${import.meta.env.VITE_API_URL}/reviews`, newReview),
+    onSuccess: () => {
+      toast.success("Review submitted!");
+      setReviewText("");
+      setRating(5);
+      refetch();
+      // Invalidate and refetch queries to refresh property data
+      queryClient.invalidateQueries(["property", id]);
+
+      // Close modal if open
+      const modal = document.getElementById("my_modal_1");
+      if (modal) modal.close();
+    },
+    onError: () => {
+      toast.error("Failed to submit review");
+    },
+  });
+
+  if (isLoading || isRollLoading) return <LoadingSpinner />;
+  if (isError || !property) return <p>Property not found</p>;
+
   const {
     title,
     image,
@@ -26,72 +70,26 @@ const PropertyDetails = () => {
     Details,
     MaximumPrice,
     MinimumPrice,
-  } = property || {};
+  } = property;
 
-  console.log(property);
-
-  useEffect(() => {
-    if (!id) return; // just stop effect, no return JSX
-
-    const fetchPropertyAndReviews = async () => {
-      try {
-        const resProperty = await fetch(
-          `${import.meta.env.VITE_API_URL}/properties/${id}`
-        );
-
-        if (!resProperty.ok) {
-          navigate("/not-found");
-          return;
-        }
-
-        const dataProperty = await resProperty.json();
-        setProperty(dataProperty);
-      } catch (error) {
-        console.error("Failed to fetch property or reviews:", error);
-        navigate("/not-found");
-      }
-    };
-
-    fetchPropertyAndReviews();
-    document.title = "DetailsPage";
-  }, [id, navigate]);
-
-  if (!property) {
-    return <div>Loading...</div>;
-  }
-
-  //   console.log(property._id);
-
-  const handleSubmitReview = async (e) => {
+  const handleSubmitReview = (e) => {
     e.preventDefault();
-    try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/reviews`, {
-        userName: user?.displayName,
-        userEmail: user?.email,
-        propertyTitle: property.title,
-        agentName: property.agent.name,
-        propertyId: property._id,
-        rating,
-        comment: reviewText,
-      });
-      toast.success("Review submitted!");
-      window.location.reload();
-      setReviewText("");
-      setRating(5);
-    } catch (err) {
-      if (err) {
-        toast.error("Failed to submit review");
-      }
-    }
+    submitReviewMutation.mutate({
+      userName: user?.displayName,
+      userImage: image,
+      userEmail: user?.email,
+      propertyTitle: title,
+      agentName: property.agent.name,
+      propertyId: property._id,
+      rating,
+      comment: reviewText,
+    });
   };
 
-  if (isRollLoading) return <LoadingSpinner />;
   return (
     <div>
-      {/* Show more property details here */}
       <div className="w-11/12 mx-auto mt-20">
         <div className="flex flex-col md:flex-row gap-6 p-6">
-          {/* LEFT: Image */}
           <div className="w-full md:w-1/2">
             <img
               src={image}
@@ -99,7 +97,6 @@ const PropertyDetails = () => {
               className="w-full h-[400px] object-cover rounded-xl shadow-md"
             />
           </div>
-          {/* RIGHT: Content */}
           <div className="w-full md:w-1/2 space-y-4">
             <h2 className="text-3xl font-bold">{title}</h2>
             <p>
@@ -114,8 +111,7 @@ const PropertyDetails = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600">
               <div className="space-y-2">
-                {/* agent section */}
-                <div className=" space-x-4 ">
+                <div className="space-x-4">
                   <div className="flex space-y-5">
                     <img
                       alt=""
@@ -130,7 +126,6 @@ const PropertyDetails = () => {
                       >
                         {property?.agent?.name}
                       </a>
-                      {/* Verification Status */}
                       <p
                         className={`text-sm font-semibold ${
                           isVerified ? "text-green-600" : "text-yellow-500"
@@ -142,8 +137,6 @@ const PropertyDetails = () => {
                   </div>
 
                   <div className="space-y-3 flex-1 flex">
-                    {/* Reviews Button */}
-                    {/* Open the modal using document.getElementById('ID').showModal() method */}
                     <button
                       disabled={roll !== "user"}
                       className="btn cursor-pointer bg-[#004d56] text-white"
@@ -151,12 +144,11 @@ const PropertyDetails = () => {
                         document.getElementById("my_modal_1").showModal()
                       }
                     >
-                      {" "}
                       Reviews
                     </button>
+
                     <dialog id="my_modal_1" className="modal">
                       <div className="modal-box">
-                        {/* Reviews section */}
                         <form
                           onSubmit={handleSubmitReview}
                           className="space-y-4"
@@ -204,27 +196,30 @@ const PropertyDetails = () => {
                           <button
                             type="submit"
                             className="btn btn-success w-full"
+                            disabled={submitReviewMutation.isLoading}
                           >
-                            Submit Review
+                            {submitReviewMutation.isLoading
+                              ? "Submitting..."
+                              : "Submit Review"}
                           </button>
                         </form>
 
                         <div className="modal-action">
                           <form method="dialog">
-                            {/* if there is a button in form, it will close the modal */}
                             <button className="btn">Close</button>
                           </form>
                         </div>
                       </div>
                     </dialog>
 
-                    {/* Add to Wishlist Button */}
-                  
-                      <Wishlist roll={roll} property={property} id={property._id} />
-     
+                    <Wishlist
+                      roll={roll}
+                      property={property}
+                      id={property._id}
+                    />
                   </div>
                 </div>
-                {/*  Description */}
+
                 <div className="pt-4 border-t border-gray-300">
                   <h3 className="text-xl font-semibold mb-1">Description:</h3>
                   <p className="leading-relaxed">{Details}</p>
@@ -234,8 +229,6 @@ const PropertyDetails = () => {
           </div>
         </div>
       </div>
-
-      {/* Reviews Section */}
 
       <Review id={property._id} />
     </div>

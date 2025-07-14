@@ -1,30 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const MyReviews = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-  const [reviews, setReviews] = useState([]);
+  const queryClient = useQueryClient();
 
-  // Fetch reviews on mount / when user.email changes
-  useEffect(() => {
-    if (!user?.email) return;
+  // Get reviews using TanStack Query
+  const {
+    data: reviews = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["my-reviews", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/my-reviews/${user.email}`);
+      return data;
+    },
+  });
 
-    const fetchReviews = async () => {
-      try {
-        const { data } = await axiosSecure.get(`/my-reviews/${user.email}`);
-        setReviews(data);
-      } catch (err) {
-        console.error("Error fetching reviews:", err);
-      }
-    };
+  //  Delete mutation using TanStack Mutation
+  const { mutate: deleteReview } = useMutation({
+    mutationFn: async (id) => {
+      await axiosSecure.delete(`/reviews/${id}`, {
+        params: { userEmail: user.email },
+      });
+    },
+    onSuccess: () => {
+      Swal.fire("Deleted!", "Your review has been deleted.", "success");
+      queryClient.invalidateQueries(["my-reviews", user?.email]); // Refresh list
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed to delete review.", "error");
+    },
+  });
 
-    fetchReviews();
-  }, [user?.email, axiosSecure]);
-
-  // Delete a review
+  // Handle delete with confirmation
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: "Delete this review?",
@@ -33,20 +49,13 @@ const MyReviews = () => {
       confirmButtonText: "Yes, delete it!",
     });
 
-    if (!result.isConfirmed) return;
-
-    try {
-      await axiosSecure.delete(`/reviews/${id}`, {
-        params: { userEmail: user.email }
-      });
-
-      setReviews((prev) => prev.filter((review) => review._id !== id));
-      Swal.fire("Deleted!", "Your review has been deleted.", "success");
-    } catch (err) {
-      console.error("Error deleting review:", err);
-      Swal.fire("Error", "Failed to delete review.", "error");
+    if (result.isConfirmed) {
+      deleteReview(id);
     }
   };
+
+  if (isLoading) return <p className="text-center">Loading reviews...</p>;
+  if (isError) return <p className="text-red-500">Error: {error.message}</p>;
 
   return (
     <div className="p-4">
@@ -58,7 +67,7 @@ const MyReviews = () => {
               key={review._id}
               className="bg-white p-4 rounded shadow border relative"
             >
-              {/* Star rating */}
+              {/* Stars */}
               <div className="flex text-yellow-400 mb-1">
                 {[...Array(5)].map((_, i) => (
                   <svg

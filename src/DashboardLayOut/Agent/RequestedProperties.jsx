@@ -1,49 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 const RequestedProperties = () => {
   const { user } = useAuth();
-  const [offers, setOffers] = useState([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!user?.email) return;
-
-    const fetchOffers = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/agent-offers/${user.email}`
-        );
-        setOffers(res.data);
-      } catch (err) {
-        console.error("Error fetching offers:", err);
-      }
-    };
-
-    fetchOffers();
-  }, [user?.email]);
-
-  const handleUpdateStatus = async (id, propertyId, status) => {
-    try {
-      await axios.patch(`${import.meta.env.VITE_API_URL}/offers/${id}`, {
-        status,
-        propertyId,
-      });
-
-      // update state after success
-      setOffers((prev) =>
-        prev.map((offer) =>
-          offer._id === id
-            ? { ...offer, status }
-            : offer.propertyId === propertyId && status === "accepted"
-            ? { ...offer, status: "rejected" }
-            : offer
-        )
+  // ✅ Fetch offers using useQuery
+  const { data: offers = [], isLoading } = useQuery({
+    queryKey: ["agent-offers", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/agent-offers/${user.email}`
       );
-    } catch (err) {
+      return res.data;
+    },
+  });
+
+  // ✅ Handle Accept/Reject using useMutation
+  const { mutate: updateStatus } = useMutation({
+    mutationFn: async ({ id, propertyId, status }) => {
+      return await axios.patch(
+        `${import.meta.env.VITE_API_URL}/offers/${id}`,
+        { status, propertyId }
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["agent-offers", user?.email]); // refresh offers list
+    },
+    onError: (err) => {
       console.error("Failed to update offer:", err);
-    }
+    },
+  });
+
+  const handleUpdateStatus = (id, propertyId, status) => {
+    updateStatus({ id, propertyId, status });
   };
+
+  if (isLoading) return <p className="text-center">Loading...</p>;
 
   return (
     <div className="p-4 overflow-scroll">
@@ -69,8 +65,6 @@ const RequestedProperties = () => {
                 <td>{offer.buyerEmail}</td>
                 <td>{offer.buyerName}</td>
                 <td>${offer.offerAmount || 0}</td>
-
-                {/* Status Cell */}
                 <td>
                   <span
                     className={`px-2 py-1 rounded-full text-white text-xs font-semibold
@@ -85,8 +79,6 @@ const RequestedProperties = () => {
                     {offer.status}
                   </span>
                 </td>
-
-                {/* Action Buttons */}
                 <td>
                   {offer.status === "pending" && (
                     <div className="flex gap-2">
