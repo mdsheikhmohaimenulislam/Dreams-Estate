@@ -5,6 +5,7 @@ const SingleCard = ({ property }) => {
   const { title, image, _id, MinimumPrice, MaximumPrice, location, status } =
     property || {};
 
+
   return (
     <div>
       <div className=" card bg-base-100 shadow-sm">
@@ -39,7 +40,7 @@ const SingleCard = ({ property }) => {
               <span
                 className={`px-2 py-1 text-center rounded-full text-white text-xs font-semibold
                       ${
-                        status === "accepted"
+                        status === "verified"
                           ? "bg-green-500"
                           : status === "rejected"
                           ? "bg-red-500"
@@ -51,12 +52,20 @@ const SingleCard = ({ property }) => {
             </div>
           </div>
         </div>
-        <Link
-          to={`/DetailsPage/${_id}`}
-          className="btn bg-[#064d57] text-white"
-        >
-          details
-        </Link>
+
+        {status === "verified" ? (
+          <Link
+            state={{ status }}
+            to={`/DetailsPage/${_id}`}
+            className="btn bg-[#064d57] text-white"
+          >
+            details
+          </Link>
+        ) : status === "pending" ? (
+          <p className="btn text-yellow-500">pending</p>
+        ) : status === "rejected" ? (
+          <p className="btn text-red-500">rejected</p>
+        ) : null}
       </div>
     </div>
   );

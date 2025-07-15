@@ -97,30 +97,6 @@ const googleSignInHandle = async () => {
   }
 };
 
-
-  //   const githubHandle = () => {
-  //     githubLogin()
-  //       .then((res) => {
-  //         console.log(res);
-  //         toast.success("Successful", {
-  //           position: "top-right",
-  //           autoClose: 5000,
-  //           hideProgressBar: false,
-  //           closeOnClick: false,
-  //           pauseOnHover: true,
-  //           draggable: true,
-  //           progress: undefined,
-  //           theme: "light",
-  //         });
-
-  //         navigate(location?.state || "/");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   };
-
-  // Dynamic title
   useEffect(() => {
     document.title = "Login";
   }, []);

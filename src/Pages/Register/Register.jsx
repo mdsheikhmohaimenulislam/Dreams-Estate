@@ -4,11 +4,14 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { imageUpload, saveUserInDb } from "../../api/utils";
+import { useState } from "react";
 
 const SignUp = () => {
   const { signInHandle, updateUserProfile, googleHandle, loading, setLoading } =
     useAuth();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
+
   // form submit handler
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,11 +20,29 @@ const SignUp = () => {
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
-
     const image = form?.image?.files[0];
-
     // image url response from imgbb
     const imageUrl = await imageUpload(image);
+    const validationErrors = [];
+
+    if (!/[A-Z]/.test(password)) {
+      validationErrors.push("Must include an uppercase letter.");
+    }
+
+    if (!/[a-z]/.test(password)) {
+      validationErrors.push("Must include a lowercase letter.");
+    }
+
+    if (password.length < 6) {
+      validationErrors.push("Must be at least 6 characters long.");
+    }
+
+    if (validationErrors.length > 0) {
+      setErrorMessage(validationErrors[0]); // Show the first error
+      return;
+    }
+
+    setErrorMessage(""); // Clear errors before Firebase attempt
 
     try {
       //2. User Registration
@@ -42,10 +63,11 @@ const SignUp = () => {
       navigate("/");
       toast.success("Signup Successful");
     } catch (err) {
+      setErrorMessage(err.message);
       console.log(err);
       toast.error(err?.message);
-    }finally{
-        setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +88,8 @@ const SignUp = () => {
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
-    }finally{
-        setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -140,7 +162,9 @@ const SignUp = () => {
               />
             </div>
           </div>
-
+          {errorMessage && (
+            <p className="text-xs text-red-600 mb-2">{errorMessage}</p>
+          )}
           <div>
             <button
               type="submit"

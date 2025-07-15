@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams} from "react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
@@ -22,10 +22,13 @@ const PropertyDetails = () => {
   const [roll, isRollLoading] = useUserroll();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(5);
-  console.log(reviewText);
+
+  const location = useLocation();
+  const { status } = location.state || {}; //  fallback in case state is null
+
+
 
   const {
     data: property,
@@ -65,8 +68,7 @@ const PropertyDetails = () => {
   const {
     title,
     image,
-    location,
-    isVerified,
+    location:propertyLocation,
     Details,
     MaximumPrice,
     MinimumPrice,
@@ -100,7 +102,7 @@ const PropertyDetails = () => {
           <div className="w-full md:w-1/2 space-y-4">
             <h2 className="text-3xl font-bold">{title}</h2>
             <p>
-              <span className="font-semibold">Location:</span> {location}
+              <span className="font-semibold">Location:</span> {propertyLocation}
             </p>
             <p>
               <span className="font-semibold">minPrice:</span> ${MinimumPrice}
@@ -128,10 +130,10 @@ const PropertyDetails = () => {
                       </a>
                       <p
                         className={`text-sm font-semibold ${
-                          isVerified ? "text-green-600" : "text-yellow-500"
+                          status ? "text-green-600" : "text-yellow-500"
                         }`}
                       >
-                        {isVerified ? " Verified" : " Pending"}
+                        {status ? " Verified" : " Pending"}
                       </p>
                     </div>
                   </div>

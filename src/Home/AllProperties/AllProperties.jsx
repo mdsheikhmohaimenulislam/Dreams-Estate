@@ -3,13 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 import SingleCard from "./SingleCard";
 
 const fetchProperties = async () => {
+
+
+
   const res = await fetch(`${import.meta.env.VITE_API_URL}/properties`);
   if (!res.ok) throw new Error("Failed to fetch properties");
   return res.json();
 };
 
 const AllProperties = () => {
-  const { data: properties = [], isLoading, isError, error } = useQuery({
+  const {
+    data: properties = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["properties"],
     queryFn: fetchProperties,
   });
@@ -18,8 +26,15 @@ const AllProperties = () => {
     document.title = "All Properties";
   }, []);
 
-  if (isLoading) return <p className="text-center py-10">Loading properties...</p>;
-  if (isError) return <p className="text-red-500 py-10 text-center">{error.message}</p>;
+
+
+  if (!properties || properties.length === 0) {
+    return <p className="text-center py-10 mt-20 bg-gray-200 w-4/6  rounded-xl mx-auto  text-black">Data Not Found</p>;
+  }
+  if (isLoading)
+    return <p className="text-center py-10">Loading properties...</p>;
+  if (isError)
+    return <p className="text-red-500 py-10 text-center">{error.message}</p>;
 
   return (
     <div className="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-20">

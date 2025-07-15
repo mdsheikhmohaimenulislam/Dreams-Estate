@@ -1,18 +1,7 @@
 import { useState } from "react";
 import { GrLogout } from "react-icons/gr";
-// import { FcSettings } from 'react-icons/fc'
 import { AiOutlineBars } from "react-icons/ai";
-// import { BsGraphUp } from 'react-icons/bs'
-// import MenuItem from './Menu/MenuItem'
-
-// import AdminMenu from './Menu/AdminMenu'
 import { Link } from "react-router";
-// import SellerMenu from './Menu/SellerMenu'
-// import CustomerMenu from './Menu/CustomerMenu'
-// import logo from '../../../assets/images/logo-flat.png'
-import useAuth from "../../hooks/useAuth";
-import UserStatistic from "../UserStatistic/UserStatistic";
-import AgentStatistic from "../AgentStatistic/AgentStatistic";
 import UserMenu from "../Menu/UserMenu";
 import AgentMenu from "../Menu/AgentMenu";
 import AdminMenu from "../Menu/AdminMenu";
@@ -20,15 +9,37 @@ import MenuItem from "../Menu/MenuItem";
 import { FcSettings } from "react-icons/fc";
 import useUserroll from "../../hooks/userRoll";
 import LoadingSpinner from "../../Components/Shared/LoadingSpinner";
+import useAuth from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const { logOut } = useAuth();
+  const { logOutHandle } = useAuth();
+
   const [isActive, setActive] = useState(false);
   const [roll, isRollLoading] = useUserroll();
 
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
+  };
+
+  //   logOut section
+  const handleLogOut = () => {
+    logOutHandle()
+      .then(() => {})
+      .catch((error) => {
+        console.log(error);
+      });
+    toast.error("Log Out", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   if (isRollLoading) return <LoadingSpinner />;
@@ -54,7 +65,7 @@ const Sidebar = () => {
 
         <button
           onClick={handleToggle}
-          className="mobile-menu-button p-4 focus:outline-none focus:bg-gray-200"
+          className="mobile-menu-button cursor-pointer p-4 focus:outline-none focus:bg-gray-200"
         >
           <AiOutlineBars className="h-5 w-5" />
         </button>
@@ -107,7 +118,7 @@ const Sidebar = () => {
             address="/dashboard/profile"
           />
           <button
-            onClick={logOut}
+            onClick={handleLogOut}
             className="flex w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform"
           >
             <GrLogout className="w-5 h-5" />
