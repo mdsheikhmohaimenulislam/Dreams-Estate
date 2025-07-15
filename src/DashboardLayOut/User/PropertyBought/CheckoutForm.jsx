@@ -16,8 +16,6 @@ const CheckoutForm = ({ data: orderData }) => {
 
   useEffect(() => {
     const getClientSecret = async () => {
-      //Server request.....
-
       const { data } = await axiosSecure.post("/create-paymentSecret", {
         price: orderData?.offerAmount,
         orderPropertyId: orderData?._id,
@@ -29,75 +27,59 @@ const CheckoutForm = ({ data: orderData }) => {
     getClientSecret();
   }, [axiosSecure, orderData]);
 
-  const handleSubmit = async (event) => {
-    setProcessing(true);
-    // Block native form submission.
-    event.preventDefault();
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  setProcessing(true);
+  setCardError(null);
 
-    if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
-      return;
-    }
+  if (!stripe || !elements) return;
 
-    // Get a reference to a mounted CardElement. Elements knows how
-    // to find your CardElement because there can only ever be one of
-    // each type of element.
-    const card = elements.getElement(CardElement);
+  const card = elements.getElement(CardElement);
+  if (!card) return;
 
-    if (card == null) {
-      return;
-    }
+  const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+    type: "card",
+    card,
+    billing_details: {
+      name: user?.displayName,
+      email: user?.email,
+    },
+  });
 
-    // Use your card Element with other Stripe.js APIs
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card,
-    });
+  if (paymentMethodError) {
+    setCardError(paymentMethodError.message);
+    setProcessing(false);
+    return;
+  }
 
-    if (error) {
-      console.log("[error]", error);
-      setCardError(error.message);
+  const result = await stripe.confirmCardPayment(clientSecret, {
+    payment_method: paymentMethod.id,
+  });
+
+  if (result.error) {
+    setCardError(result.error.message);
+    setProcessing(false);
+    return;
+  }
+
+  if (result.paymentIntent.status === "succeeded") {
+    const transactionId = result.paymentIntent.id;
+
+    try {
+      // ✅ Update offer status to 'bought' in makeOffer collection
+      await axiosSecure.patch(`/makeOffer/payment-success/${orderData._id}`, {
+        transactionId,
+      });
+
+      toast.success("Payment successful! Property marked as bought.");
+    } catch (err) {
+      console.error("Error updating offer:", err.response?.data || err.message);
+      toast.error("Payment done, but failed to update offer status.");
+    } finally {
       setProcessing(false);
-      return;
-    } else {
-      console.log("[PaymentMethod]", paymentMethod);
-      setCardError(null);
     }
-
-    // Taka katar pala
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card,
-        billing_details: {
-          name: user?.displayName,
-          email: user?.email,
-        },
-      },
-    });
-
-    if (result?.error) {
-      setCardError(result.error.message);
-      return;
-    }
-
-    if (result?.paymentIntent?.status === "succeeded") {
-      orderData.transactionId = result.paymentIntent.id;
-      try {
-        const { data } = await axiosSecure.post("/order", orderData);
-        console.log(data);
-        if (data?.insertedId) {
-          toast.success("Order Placed Successfully!");
-        }
-      } catch (err) {
-        console.log(err);
-        toast.error("You have already added a parcel");
-      } finally {
-        setProcessing(false);
-        setCardError(null);
-      }
-    }
-  };
+  }
+};
 
   return (
     <form onSubmit={handleSubmit}>

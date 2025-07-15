@@ -23,6 +23,9 @@ const PaymentPage = () => {
     pending,
   } = data || {};
 
+
+
+
   return (
     <div>
       <div className="card w-4/6 mx-auto bg-base-100 mt-10 shadow-sm">

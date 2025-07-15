@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import MySoldTableBody from "./MySoldTableBody";
 
+const fetchSoldProperties = async (email) => {
+  const res = await axios.get(
+    `${import.meta.env.VITE_API_URL}/sold-properties/${email}`
+  );
+  return res.data;
+};
+
 const MySoldProperties = () => {
-  const { user } = useAuth(); // Logged-in agent
-  const [soldProperties, setSoldProperties] = useState([]);
+  const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchSold = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/sold-properties/${user.email}`
-        );
-        setSoldProperties(res.data);
-      } catch (error) {
-        console.error("Error fetching sold properties:", error);
-      }
-    };
+  const {
+    data: soldProperties = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["soldProperties", user?.email],
+    queryFn: () => fetchSoldProperties(user.email),
+    enabled: !!user?.email, // only fetch when user.email is available
+  });
 
-    if (user?.email) {
-      fetchSold();
-    }
-  }, [user?.email]);
-
-  console.log(soldProperties);
+  if (isLoading) return <p>Loading sold properties...</p>;
+  if (isError) return <p>Error loading sold properties: {error.message}</p>;
 
   return (
     <div className="p-4">
@@ -44,8 +46,11 @@ const MySoldProperties = () => {
               </tr>
             </thead>
             <tbody>
-              {soldProperties.map((soldProperty, index) => (
-                <MySoldTableBody key={soldProperty._id || index} soldProperty={soldProperty} />
+              {soldProperties.map((soldProperty) => (
+                <MySoldTableBody
+                  key={soldProperty._id}
+                  soldProperty={soldProperty}
+                />
               ))}
             </tbody>
           </table>

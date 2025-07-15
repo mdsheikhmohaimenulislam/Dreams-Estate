@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { imageUpload } from "../../../api/utils";
 
 const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
-  const { title, location, _id, image: oldImage,MinimumPrice,MaximumPrice } = property || {};
+  const { title, location, _id, image: oldImage, MinimumPrice, MaximumPrice } = property || {};
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const modalRef = useRef();
@@ -34,16 +34,10 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
         autoClose: 1500,
         transition: Bounce,
       });
-      window.location.reload();
+      queryClient.invalidateQueries({ queryKey: ["myProperties"] });
+      queryClient.refetchQueries({ queryKey: ["myProperties"] });
       handleUpdateProperty?.(data);
-
-      queryClient.invalidateQueries({
-        queryKey: ["myProperties"],
-        refetchType: "active",
-      });
       modalRef.current?.close();
-      // Optionally force reload page or re-fetch other data here if needed
-      // window.location.reload(); // Uncomment if you want full page reload
     },
     onError: () => {
       toast.error("Failed to update property");
@@ -71,7 +65,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
   const handleUpdate = (e) => {
     e.preventDefault();
 
-    // Prevent submit if image is uploading or upload failed
     if (isUploadingImage) {
       toast.warn("Please wait for the image to finish uploading.");
       return;
@@ -82,7 +75,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
     }
     if (imageUploadError) {
       toast.error("Please fix the image upload error before submitting.");
-
       return;
     }
 
@@ -91,6 +83,8 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
       title: form.title.value,
       location: form.location.value,
       image: uploadedImage,
+      MaximumPrice: form.MaximumPrice.value,
+      MinimumPrice: form.MinimumPrice.value,
       agent: {
         name: user?.displayName,
         email: user?.email,
@@ -114,7 +108,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
       <dialog ref={modalRef} className="modal">
         <div className="modal-box">
           <form onSubmit={handleUpdate} className="space-y-4">
-            {/* Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Upload Property Image
@@ -147,7 +140,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
               )}
             </div>
 
-            {/* Title */}
             <div>
               <label className="block font-medium">Title</label>
               <input
@@ -159,7 +151,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
               />
             </div>
 
-            {/* Location */}
             <div>
               <label className="block font-medium">Location</label>
               <input
@@ -170,7 +161,7 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
                 required
               />
             </div>
-            {/* maxPrice */}
+
             <div>
               <label className="block font-medium">maxPrice</label>
               <input
@@ -181,9 +172,9 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
                 required
               />
             </div>
-            {/* maxPrice */}
+
             <div>
-              <label className="block font-medium">maxPrice</label>
+              <label className="block font-medium">minPrice</label>
               <input
                 type="text"
                 name="MinimumPrice"
@@ -193,7 +184,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
               />
             </div>
 
-            {/* Agent Info */}
             <div>
               <label className="block font-medium">Agent Name</label>
               <input
@@ -213,7 +203,6 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
               />
             </div>
 
-            {/* Buttons */}
             <div className="modal-action">
               <button
                 type="submit"

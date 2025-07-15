@@ -1,7 +1,4 @@
-import React from "react";
 import { Link } from "react-router";
-import useUserroll from "../../../hooks/userRoll";
-import LoadingSpinner from "../../../Components/Shared/LoadingSpinner";
 
 const BoughtSingleCard = ({ data }) => {
   const {
@@ -10,50 +7,43 @@ const BoughtSingleCard = ({ data }) => {
     agentName,
     offerAmount,
     propertyImage,
-    pending,
+    status,
+    transactionId,
   } = data || {};
-  const [roll, isRollLoading] = useUserroll();
-
-  if (isRollLoading) return <LoadingSpinner />;
+  console.log("kk", data);
   return (
     <div className="card bg-base-100 mt-20 shadow-sm">
-      <div>
-        <figure>
-          <img src={propertyImage} alt={propertyTitle} />
-        </figure>
-      </div>
+      <figure>
+        <img src={propertyImage} alt={propertyTitle} />
+      </figure>
       <div className="card-body">
-        {/* Text Right */}
-        <div>
-          <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-900">
-            {propertyTitle || "No Title"}
-          </h3>
-          <p className="text-sm md:text-base text-gray-600 mb-1">
-            <strong>Location:</strong> {location || "Unknown"}
-          </p>
-          <p className="text-sm md:text-base text-gray-600 mb-1">
-            <strong>Agent:</strong> {agentName || "Unknown"}
-          </p>
-          <p className="text-sm mb-2 md:text-base font-semibold text-green-600">
-            Offer Amount: ${offerAmount?.toLocaleString() || "N/A"}
-          </p>
-          {/* Verification Status */}
-          <p
-            className={`text-sm font-semibold ${
-              pending ? "text-green-600" : "text-yellow-500"
-            }`}
+        <h3 className="text-lg font-semibold">{propertyTitle}</h3>
+        <p>
+          <strong>Location:</strong> {location}
+        </p>
+        <p>
+          <strong>Agent:</strong> {agentName}
+        </p>
+        <p className="text-green-600 font-semibold">
+          Offer Amount: ${offerAmount?.toLocaleString()}
+        </p>
+        {/* Show status directly */}
+        <p className="text-sm font-semibold">
+          Status:{" "}
+          <span
+            className={
+              status === "bought" ? "text-green-600" : "text-yellow-500"
+            }
           >
-            {pending ? " Verified" : " Pending"}
-          </p>
-        </div>
+            {status || "pending"}
+          </span>
+        </p>
+
         <div className="card-actions justify-end">
-          {roll !== "user" ? (
-            <button
-              disabled={roll !== "user"}
-              className="btn bg-green-500 text-white hover:cursor-all-scroll"
-            >
-              Purchase
-            </button>
+          {status === "bought" && transactionId ? (
+            <span className="text-blue-600 font-medium text-sm text-center">
+              transactionId: <code>{transactionId}</code>
+            </span>
           ) : (
             <Link
               to="/dashboard/PaymentPage"

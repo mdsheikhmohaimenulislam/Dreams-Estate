@@ -1,29 +1,49 @@
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import MyPropertiesSingleCard from "./MyPropertiesSingleCard";
+import axios from "axios";
 
 const MyAddProperties = () => {
   const { user } = useAuth();
-  const [properties, setProperties] = useState([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/properties`)
-      .then((res) => res.json())
-      .then((data) => {
-        const filterProperties = data.filter(
-          (properti) => properti?.agent?.email === user?.email
-        );
-        setProperties(filterProperties);
-      })
-      .catch((error) => {
-        console.error("Failed to load Properties:", error.message);
-      });
+  // Fetch properties filtered by logged-in user email
+  const { data: properties = [], isLoading } = useQuery({
+    queryKey: ["myProperties", user?.email],
+    enabled: !!user?.email, // only run when user email exists
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/properties`);
+      // Filter properties owned by current user
+      return res.data.filter((property) => property?.agent?.email === user?.email);
+    },
+  });
 
-    document.title = "My Properties List";
-  }, [user]);
 
-  // Deleted section
+
+  
+
+const deleteMutation = useMutation({
+  mutationFn: async (id) => {
+    const res = await axios.delete(`${import.meta.env.VITE_API_URL}/properties/${id}`);
+    return res.data;  // just the data here
+  },
+  onSuccess: (data, id) => {  // id is the variable passed to mutate()
+    if (data.deletedCount) {
+      Swal.fire("Deleted!", "Your property has been deleted.", "success");
+
+      // Instantly remove from cache
+      queryClient.setQueryData(["myProperties", user?.email], (old = []) =>
+        old.filter((item) => item._id !== id)
+      );
+
+      // Refetch to keep data fresh (optional)
+      queryClient.invalidateQueries(["myProperties", user?.email]);
+    }
+  },
+});
+
+  // Confirm deletion dialog and trigger mutation
   const handleDeleted = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -34,64 +54,32 @@ const MyAddProperties = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      // console.log(result);
-      // Start Deleted the Properties
-
       if (result.isConfirmed) {
-        fetch(`${import.meta.env.VITE_API_URL}/properties/${id}`, {
-          method: "DELETE",
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            // console.log(data);
-            if (data.deletedCount) {
-              Swal.fire({
-                title: "Deleted!",
-                text: "Your Properties has been deleted.",
-                icon: "success",
-              });
-            }
-            // filter section
-            const remainingProperties = properties.filter(
-              (filterProperties) => filterProperties._id !== id
-            );
-            setProperties(remainingProperties);
-          });
+        deleteMutation.mutate(id);
       }
     });
   };
 
-
-
-
-
-
-  // Ui update
+  // Update property in local cache (UI only)
   const handleUpdateMarathon = (updatedMarathon) => {
-    const updatedList = properties.map((marathon) =>
-      marathon._id === updatedMarathon._id ? updatedMarathon : marathon
+    queryClient.setQueryData(["myProperties", user?.email], (old) =>
+      old.map((item) => (item._id === updatedMarathon._id ? updatedMarathon : item))
     );
-    setProperties(updatedList);
   };
 
-
-
+  if (isLoading) return <p className="text-center">Loading...</p>;
 
   return (
-    <>
-      {/* <NavBar /> */}
-      <div className=" mt-15 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3   gap-10">
-        {properties.map((property) => (
-          <MyPropertiesSingleCard
-            key={property?._id}
-            property={property}
-            handleDeleted={handleDeleted}
+    <div className="mt-15 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      {properties.map((property) => (
+        <MyPropertiesSingleCard
+          key={property._id}
+          property={property}
+          handleDeleted={handleDeleted}
           handleUpdateMarathon={handleUpdateMarathon}
-          />
-        ))}
-      </div>
-      {/* <Footer /> */}
-    </>
+        />
+      ))}
+    </div>
   );
 };
 

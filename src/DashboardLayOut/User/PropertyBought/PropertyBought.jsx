@@ -7,22 +7,14 @@ const PropertyBought = () => {
   const [property, setProperties] = useState([]);
   const { user } = useAuth();
 
-  console.log(property);
-
   useEffect(() => {
-    if (!user?.email) return; // Wait for user email
+    if (!user?.email) return;
 
     const fetchData = async () => {
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/makeOffer/${user.email}`
         );
-
-        // Filter only successful purchases with transactionId
-        // const boughtProperties = res.data.filter(
-        //   (item) => item.transactionId
-        // );
-
         setProperties(res.data);
       } catch (err) {
         console.error("Error fetching bought properties:", err);
@@ -33,7 +25,7 @@ const PropertyBought = () => {
   }, [user?.email]);
 
   return (
-    <div >
+    <div>
       {property.length === 0 ? (
         <p>No bought properties yet.</p>
       ) : (
