@@ -5,9 +5,9 @@ import axios from "axios";
 import MySoldTableBody from "./MySoldTableBody";
 
 const fetchSoldProperties = async (email) => {
-  const res = await axios.get(
-    `${import.meta.env.VITE_API_URL}/sold-properties/${email}`
-  );
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/order`, {
+    params: { buyerEmail: email },  // use the parameter 'email'
+  });
   return res.data;
 };
 
@@ -20,26 +20,29 @@ const MySoldProperties = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["soldProperties", user?.email],
+    queryKey: ["order", user?.email],
     queryFn: () => fetchSoldProperties(user.email),
-    enabled: !!user?.email, // only fetch when user.email is available
+    enabled: !!user?.email,
   });
 
-  if (isLoading) return <p>Loading sold properties...</p>;
-  if (isError) return <p>Error loading sold properties: {error.message}</p>;
+  if (isLoading) return <p className="text-center">Loading sold properties...</p>;
+  if (isError) return <p className="text-red-500 text-center">Error: {error.message}</p>;
+
+console.log(soldProperties);
+
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">My Sold Properties</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">My Sold Properties</h2>
       {soldProperties.length === 0 ? (
-        <p>No properties sold yet.</p>
+        <p className="text-center">No properties sold yet.</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="table w-full">
-            <thead>
+          <table className="table w-full border">
+            <thead className="bg-gray-100">
               <tr>
                 <th>Property Title</th>
-                <th>Property Location</th>
+                <th>Location</th>
                 <th>Buyer Email</th>
                 <th>Buyer Name</th>
                 <th>Sold Price</th>

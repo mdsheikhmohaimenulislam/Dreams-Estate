@@ -41,6 +41,8 @@ const RequestedProperties = () => {
 
   if (isLoading) return <p className="text-center">Loading...</p>;
 
+  console.log(offers);
+
   return (
     <div className="p-4 overflow-scroll">
       <h2 className="text-xl font-bold mb-4">Requested / Offered Properties</h2>
@@ -80,7 +82,7 @@ const RequestedProperties = () => {
                   </span>
                 </td>
                 <td>
-                  {offer.status === "pending" && (
+                  {offer.status === "bought" && (
                     <div className="flex gap-2">
                       <button
                         className="btn btn-sm bg-green-500 text-white"
