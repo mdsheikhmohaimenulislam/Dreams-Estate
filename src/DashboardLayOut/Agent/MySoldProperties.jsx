@@ -5,7 +5,7 @@ import axios from "axios";
 import MySoldTableBody from "./MySoldTableBody";
 
 const fetchSoldProperties = async (email) => {
-  const res = await axios.get(`${import.meta.env.VITE_API_URL}/order`, {
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/makeOffer`, {
     params: { buyerEmail: email },  // use the parameter 'email'
   });
   return res.data;

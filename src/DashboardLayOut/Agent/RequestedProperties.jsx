@@ -7,7 +7,7 @@ const RequestedProperties = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // ✅ Fetch offers using useQuery
+  //  Fetch offers using useQuery
   const { data: offers = [], isLoading } = useQuery({
     queryKey: ["agent-offers", user?.email],
     enabled: !!user?.email,
@@ -19,7 +19,7 @@ const RequestedProperties = () => {
     },
   });
 
-  // ✅ Handle Accept/Reject using useMutation
+  //  Handle Accept/Reject using useMutation
   const { mutate: updateStatus } = useMutation({
     mutationFn: async ({ id, propertyId, status }) => {
       return await axios.patch(
