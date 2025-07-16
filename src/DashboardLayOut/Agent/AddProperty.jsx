@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { imageUpload } from "../../api/utils";
 import { useMutation } from "@tanstack/react-query";
@@ -16,6 +16,10 @@ const AddPropertyForm = () => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/add-properties`,
         propertyData
+      ,
+      {
+        withCredentials:true
+      }
       );
       return data;
     },
@@ -70,6 +74,13 @@ const AddPropertyForm = () => {
 
     submitProperty(property);
   };
+
+
+
+  useEffect(() => {
+    document.title = "AddProperty";
+  }, []);
+
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gray-50 p-5">

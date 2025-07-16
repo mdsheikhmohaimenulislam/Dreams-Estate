@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation } from "react-router";
 import useAuth from "../../../../hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
@@ -19,7 +19,11 @@ const OfferPage = () => {
     MaximumPrice,
   } = property;
 
-  console.log(property);
+
+
+useEffect(() => {
+  document.title = "OfferPage";
+}, []);
 
   //  Always ensure correct price range
   const priceMin = Math.min(parseInt(MinimumPrice), parseInt(MaximumPrice));

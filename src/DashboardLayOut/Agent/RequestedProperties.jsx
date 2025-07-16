@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
@@ -41,7 +40,10 @@ const RequestedProperties = () => {
 
   if (isLoading) return <p className="text-center">Loading...</p>;
 
-  console.log(offers);
+
+  document.title = "RequestedProperties";
+
+
 
   return (
     <div className="p-4 overflow-scroll">

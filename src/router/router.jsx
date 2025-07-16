@@ -85,7 +85,9 @@ export const router = createBrowserRouter([
         path: "addProperty",
         element: (
           <PrivateRouter>
-            <AddProperty />
+            <AgentPrivateRouter>
+              <AddProperty />
+            </AgentPrivateRouter>
           </PrivateRouter>
         ),
       },

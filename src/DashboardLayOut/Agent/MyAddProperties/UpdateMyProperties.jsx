@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast, Bounce } from "react-toastify";
 import useAuth from "../../../hooks/useAuth";
@@ -95,6 +95,11 @@ const UpdateMyProperties = ({ handleUpdateProperty, property }) => {
 
     updateProperty({ id: _id, updatedProperty });
   };
+
+  useEffect(() => {
+    document.title = "UpdateMyProperties";
+  }, []);
+
 
   return (
     <div>

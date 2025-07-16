@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import MyPropertiesSingleCard from "./MyPropertiesSingleCard";
 import axios from "axios";
+import { useEffect } from "react";
 
 const MyAddProperties = () => {
   const { user } = useAuth();
@@ -20,7 +21,9 @@ const MyAddProperties = () => {
   });
 
 
-
+  useEffect(() => {
+    document.title = "MyAddProperties";
+  }, []);
   
 
 const deleteMutation = useMutation({

@@ -12,29 +12,27 @@ const ManageProperties = () => {
       );
       setProperty(res.data);
     };
+    document.title = "ManageProperties";
     fetchProperties();
   }, []);
 
+  const handleUpdateStatus = async (id, status) => {
+    try {
+      await axiosSecure.patch(
+        `${import.meta.env.VITE_API_URL}/properties/${id}`,
+        {
+          status,
+        }
+      );
 
-
-
-
-const handleUpdateStatus = async (id, status) => {
-  try {
-    await axiosSecure.patch(`${import.meta.env.VITE_API_URL}/properties/${id}`, {
-      status,
-    });
-
-    // update state with new status
-    setProperty((prev) =>
-      prev.map((item) =>
-        item._id === id ? { ...item, status } : item
-      )
-    );
-  } catch (err) {
-    console.error("Failed to update status:", err);
-  }
-};
+      // update state with new status
+      setProperty((prev) =>
+        prev.map((item) => (item._id === id ? { ...item, status } : item))
+      );
+    } catch (err) {
+      console.error("Failed to update status:", err);
+    }
+  };
 
   return (
     <div>

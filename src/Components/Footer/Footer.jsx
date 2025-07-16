@@ -4,15 +4,12 @@ import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaFacebook } from "react-icons/fa";
-
+import { Link } from "react-router";
 
 const Footer = () => {
+  const { googleHandle } = use(AuthContext);
 
-
-      const { googleHandle } = use(AuthContext);
-
-
- // google set up
+  // google set up
   const googleSignInHandle = () => {
     googleHandle()
       .then((res) => {
@@ -28,50 +25,50 @@ const Footer = () => {
           progress: undefined,
           theme: "light",
         });
-
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-
-
-
   return (
     <div>
-      <footer className={`footer mt-20 footer-horizontal footer-center text-base-content rounded p-10 bg-base-300`}>
-            <div className="flex items-center">
-              <img
-                className="-ml-6 md:ml-0 w-[60px] h-[50px]"
-                src="/logo.png"
-                alt=""
-              />
-              <h1 className="ml-0 text-2xl font-extrabold">Dreams Estate</h1>
-            </div>
+      <footer
+        className={`footer mt-20 footer-horizontal footer-center text-base-content rounded p-10 bg-base-300`}
+      >
+        <div className="flex items-center">
+          <img
+            className="-ml-6 md:ml-0 w-[60px] h-[50px]"
+            src="/logo.png"
+            alt=""
+          />
+          <h1 className="ml-0 text-2xl font-extrabold">Dreams Estate</h1>
+        </div>
         <nav className="grid grid-flow-col gap-4">
-          <a href="/" className="link link-hover">Home</a>
-          <a href="/crypto" className="link link-hover">Supports</a>
-          <a href="/contact" className="link link-hover">Contact Us</a>
-          <a href="http://localhost:5173/allMarathons" className="link link-hover">AllMarathon</a>
-          <a href="http://localhost:5173/dashboard" className="link link-hover">Dashboard</a>
-
+          <Link to="/" className="link link-hover">
+            Home
+          </Link>
+          <Link to="/properties" className="link link-hover">
+            All properties
+          </Link>
+          <Link to="/dashboard" className="link link-hover">
+            Dashboard
+          </Link>
         </nav>
         <nav>
           <div className="grid grid-flow-col gap-4">
-        <button
-            onClick={googleSignInHandle}
-            aria-label="Log in with Google"
-            className="rounded-sm cursor-pointer"
-          >
-<FcGoogle size={30} />
-          </button>
-            <a href="https://www.youtube.com/" className="cursor-pointer" >
-              
+            <button
+              onClick={googleSignInHandle}
+              aria-label="Log in with Google"
+              className="rounded-sm cursor-pointer"
+            >
+              <FcGoogle size={30} />
+            </button>
+            <a href="https://www.youtube.com/" className="cursor-pointer">
               <IoLogoYoutube className="text-red-600" size={30} />
             </a>
-            <a href="https://www.facebook.com/" className="cursor-pointer" >
-             <FaFacebook size={30} className="text-blue-600" />
+            <a href="https://www.facebook.com/" className="cursor-pointer">
+              <FaFacebook size={30} className="text-blue-600" />
             </a>
           </div>
         </nav>

@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 import { Outlet } from 'react-router';
 
+
+
 const DashboardRoot = () => {
+
+
+
+
+  useEffect(() => {
+    document.title = "Dashboard";
+  }, []);
+
+
+
+
     return (
     <div className='relative min-h-screen md:flex bg-white'>
       {/* Left Side: Sidebar Component */}

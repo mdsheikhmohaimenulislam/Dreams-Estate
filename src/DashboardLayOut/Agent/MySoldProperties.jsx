@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
@@ -28,7 +28,7 @@ const MySoldProperties = () => {
   if (isLoading) return <p className="text-center">Loading sold properties...</p>;
   if (isError) return <p className="text-red-500 text-center">Error: {error.message}</p>;
 
-console.log(soldProperties);
+document.title = "MySoldProperties"
 
 
   return (

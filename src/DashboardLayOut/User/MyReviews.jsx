@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -53,6 +53,12 @@ const MyReviews = () => {
       deleteReview(id);
     }
   };
+
+
+useEffect(() => {
+  document.title = "MyReviews";
+}, []);
+
 
   if (isLoading) return <p className="text-center">Loading reviews...</p>;
   if (isError) return <p className="text-red-500">Error: {error.message}</p>;

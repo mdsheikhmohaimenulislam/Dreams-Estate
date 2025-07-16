@@ -8,6 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaTwitter } from "react-icons/fa";
 import { AiTwotoneEye, AiTwotoneEyeInvisible } from "react-icons/ai";
 import { saveUserInDb } from "../../api/utils";
+import axios from "axios";
 
 const Login = () => {
   const {
@@ -48,51 +49,69 @@ const Login = () => {
 try {
   const result = await loginHandle(email, password);
 
+  //  Get JWT token from backend
+  const res = await axios.post("https://b11a12-server-side-six.vercel.app/jwt", {
+    email: result?.user?.email,
+  });
+
+  const token = res.data.token;
+  if (token) {
+    localStorage.setItem("access-token", token);
+    console.log(" Token saved:", token);
+
+  }
+
+  // Save user to DB (optional)
   const userData = {
     name: result?.user?.displayName,
     email: result?.user?.email,
     image: result?.user?.photoURL,
   };
-
-  await saveUserInDb(userData); // <- MUST use await here
+  await saveUserInDb(userData);
 
   toast.success("Login successful!");
   navigate(location?.state || "/");
 } catch (error) {
   setErrorMessage(error.message);
-  toast.error("Login failed");
+  setErrorMessage(errorMessage);
 }
-  };
+}
 
   // google set up
 const googleSignInHandle = async () => {
   try {
-    // 1. Google sign in
     const result = await googleHandle();
-    console.log(" Google login result:", result);
 
     const userData = {
       name: result?.user?.displayName,
       email: result?.user?.email,
       image: result?.user?.photoURL,
     };
-    console.log(" Extracted user data:", userData);
 
-    // 2. Save user to database
-    await saveUserInDb(userData); 
-  
+    //  1. Get token from server
+    const res = await axios.post("https://b11a12-server-side-six.vercel.app/jwt", {
+      email: result?.user?.email,
+    });
 
-    // 3. Notify and navigate
+    const token = res.data.token;
+    if (token) {
+      localStorage.setItem("access-token", token);
+      // console.log(" Token saved (Google):", token);
+    }
+
+    //  2. Save to DB
+    await saveUserInDb(userData);
+
+    //  3. Go to homepage
     toast.success("Login Successful");
     navigate(location?.state || "/");
   } catch (error) {
     console.error("Google login or user save failed:", error);
 
     if (error.response?.status === 409) {
-      // if user already exists
       toast.info("User already exists");
     } else {
-      toast.error("Something went wrong during login");
+    console.error("Something went wrong during login");
     }
   }
 };

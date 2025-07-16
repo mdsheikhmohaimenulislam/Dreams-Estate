@@ -20,22 +20,19 @@ const UserWishlist = () => {
         console.error("Failed to fetch wishlist:", error);
       }
     };
-
+    document.title = "Wishlist";
     fetchWishlist();
   }, [user?.email]);
 
-    const handleRemove = (id) => {
-    setWishlist(prev => prev.filter(wish => wish._id !== id));
+  const handleRemove = (id) => {
+    setWishlist((prev) => prev.filter((wish) => wish._id !== id));
   };
-
-
-
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-5 mt-20">
         {wishlist.map((wish) => (
-          <WishCard key={wish._id} wish={wish} handleRemove={handleRemove}/>
+          <WishCard key={wish._id} wish={wish} handleRemove={handleRemove} />
         ))}
       </div>
     </div>

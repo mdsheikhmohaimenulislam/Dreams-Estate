@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 const fetchReviews = async () => {
@@ -28,11 +29,16 @@ const ManageReview = () => {
     },
   });
 
+
+  useEffect(() => {
+  document.title = "ManageReview";
+}, []);
+
   if (isLoading) return <p className="text-center">Loading reviews...</p>;
   console.log(reviews);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
       {reviews.map((review) => (
         <div key={review._id} className="card bg-white shadow-md p-4">
           <div className="flex items-center gap-4">

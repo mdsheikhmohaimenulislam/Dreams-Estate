@@ -20,7 +20,7 @@ const PropertyBought = () => {
         console.error("Error fetching bought properties:", err);
       }
     };
-
+    document.title = "PropertyBough";
     fetchData();
   }, [user?.email]);
 

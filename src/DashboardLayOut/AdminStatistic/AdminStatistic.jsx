@@ -2,7 +2,7 @@ import { FaUserAlt, FaDollarSign } from 'react-icons/fa'
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs'
 
 const AdminStatistics = () => {
-    return <h1>No data found</h1>
+    return <h1 className='text-center p-20 bg-gray-200 mt-20 font-bold text-2xl rounded-xl'>No Data Here Click The Lift Side Button</h1>
 //   return (
 //     <div>
 //       <div className='mt-12'>

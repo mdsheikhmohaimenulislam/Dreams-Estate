@@ -88,6 +88,10 @@ const PropertyDetails = () => {
     });
   };
 
+
+
+
+  
   return (
     <div>
       <div className="w-11/12 mx-auto mt-20">
@@ -111,7 +115,7 @@ const PropertyDetails = () => {
               <span className="font-semibold">maxPrice:</span> ${MaximumPrice}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600">
+            <div className="grid grid-cols-1  gap-4 text-gray-600">
               <div className="space-y-2">
                 <div className="space-x-4">
                   <div className="flex space-y-5">

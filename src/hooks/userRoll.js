@@ -4,9 +4,7 @@ import useAxiosSecure from "./useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
 const useUserroll = () => {
-  const { user ,loading} = useAuth();
-  // const [roll, setRoll] = useState(null);
-  // const [isRollLoading, setIsRollLoading] = useState(true);
+  const { user, loading } = useAuth();
   const axiosSecure = useAxiosSecure();
 
   const { data: roll, isLoading: isRollLoading } = useQuery({
@@ -18,7 +16,16 @@ const useUserroll = () => {
     },
   });
 
-  // useEffect(() => {
+  return [roll?.roll, isRollLoading];
+};
+
+export default useUserroll;
+
+  // const [roll, setRoll] = useState(null);
+  // const [isRollLoading, setIsRollLoading] = useState(true);
+  
+
+    // useEffect(() => {
   //   const fetchUserRoll = async () => {
   //     if (!user) return setIsRollLoading(false);
 
@@ -36,14 +43,3 @@ const useUserroll = () => {
 
   //   fetchUserRoll();
   // }, [user, axiosSecure]);
-
-  return [roll?.roll, isRollLoading];
-};
-
-export default useUserroll;
-
-
-
-
-
-

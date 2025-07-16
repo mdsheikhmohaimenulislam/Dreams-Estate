@@ -4,12 +4,12 @@ import useAuth from "../../hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { TbFidgetSpinner } from "react-icons/tb";
 import { imageUpload, saveUserInDb } from "../../api/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SignUp = () => {
-  const { signInHandle, updateUserProfile, googleHandle, loading, setLoading } =
-    useAuth();
+  const { signInHandle, updateUserProfile, googleHandle } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   // form submit handler
@@ -64,8 +64,8 @@ const SignUp = () => {
       toast.success("Signup Successful");
     } catch (err) {
       setErrorMessage(err.message);
-      console.log(err);
-      toast.error(err?.message);
+
+      setErrorMessage(err);
     } finally {
       setLoading(false);
     }
@@ -86,12 +86,16 @@ const SignUp = () => {
       navigate("/");
       toast.success("Signup Successful");
     } catch (err) {
-      console.log(err);
-      toast.error(err?.message);
+      setErrorMessage(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    document.title = "Register";
+  }, []);
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">

@@ -33,8 +33,6 @@ const ContextProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-
-
   //!that section use case
   const updateUserProfile = (name, photo) => {
     return updateProfile(auth.currentUser, {
@@ -76,22 +74,32 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       console.log("CurrentUser-->", currentUser?.email);
-      if (currentUser?.email) {
-        setUser(currentUser);
+      setUser(currentUser);
+      if (currentUser) {
 
-        // Get JWT token
-        await axios.post(
+        //  Get JWT token from backend and save to localStorage
+        const res = await axios.post(
           `${import.meta.env.VITE_API_URL}/jwt`,
-          {
-            email: currentUser?.email,
-          },
+          { email: currentUser.email },
           { withCredentials: true }
         );
+
+
+        const token = res.data.token;
+        // console.log(res.data);
+        if (token) {
+          localStorage.setItem("access-token", token);
+          // console.log("JWT token saved:", token);
+        }
       } else {
-        setUser(currentUser);
+        setUser(null);
+        //  Logout from server and clean token
         await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
           withCredentials: true,
         });
+
+        localStorage.removeItem("access-token");
+        console.log("JWT token removed");
       }
       setLoading(false);
     });
@@ -111,7 +119,6 @@ const ContextProvider = ({ children }) => {
     setUser,
     githubLogin,
     googleHandle,
-
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;

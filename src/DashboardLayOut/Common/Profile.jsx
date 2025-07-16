@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import LoadingSpinner from "../../Components/Shared/LoadingSpinner"
 import useAuth from "../../hooks/useAuth"
 import useUserroll from "../../hooks/userRoll"
@@ -9,6 +10,19 @@ import useUserroll from "../../hooks/userRoll"
 const Profile = () => {
   const { user } = useAuth  ()
   const [roll, isRollLoading] = useUserroll()
+
+
+
+
+useEffect(() => {
+  document.title = "Profile";
+}, []);
+
+
+
+
+
+
   if (isRollLoading) return <LoadingSpinner />
   return (
     <div className='flex justify-center items-center h-screen'>
