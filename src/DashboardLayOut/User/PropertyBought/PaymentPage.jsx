@@ -12,7 +12,7 @@ const PaymentPage = () => {
   const location = useLocation();
   const data = location.state || {};
 
-  console.log('mi',data);
+  // console.log('mi',data);
 
   const {
     propertyTitle,

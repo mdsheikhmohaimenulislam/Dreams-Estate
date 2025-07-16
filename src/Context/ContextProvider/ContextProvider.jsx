@@ -73,7 +73,7 @@ const ContextProvider = ({ children }) => {
   // onAuthStateChange
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      console.log("CurrentUser-->", currentUser?.email);
+      // console.log("CurrentUser-->", currentUser?.email);
       setUser(currentUser);
       if (currentUser) {
 
@@ -99,7 +99,7 @@ const ContextProvider = ({ children }) => {
         });
 
         localStorage.removeItem("access-token");
-        console.log("JWT token removed");
+        // console.log("JWT token removed");
       }
       setLoading(false);
     });

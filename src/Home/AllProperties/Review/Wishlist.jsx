@@ -8,7 +8,7 @@ const Wishlist = ({ id, property ,roll}) => {
   const { user } = useAuth();
   const [isAdded, setIsAdded] = useState(false);
 
-  console.log(property);
+  // console.log(property);
   const handleAddToWishlist = async () => {
     const result = await Swal.fire({
       title: "Are you sure?",

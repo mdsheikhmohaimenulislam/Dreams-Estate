@@ -13,18 +13,20 @@ const Footer = () => {
   const googleSignInHandle = () => {
     googleHandle()
       .then((res) => {
-        console.log(res);
+        // console.log(res);
 
-        toast.success("Successful", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        if (res) {
+          toast.success("Successful", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
       })
       .catch((error) => {
         console.log(error);

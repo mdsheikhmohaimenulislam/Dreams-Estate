@@ -10,7 +10,7 @@ const BoughtSingleCard = ({ data }) => {
     status,
     transactionId,
   } = data || {};
-  console.log("kk", data);
+  // console.log("kk", data);
   return (
     <div className="card bg-base-100 mt-20 shadow-sm">
       <figure>

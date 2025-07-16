@@ -17,9 +17,6 @@ const AddPropertyForm = () => {
         `${import.meta.env.VITE_API_URL}/add-properties`,
         propertyData
       ,
-      {
-        withCredentials:true
-      }
       );
       return data;
     },

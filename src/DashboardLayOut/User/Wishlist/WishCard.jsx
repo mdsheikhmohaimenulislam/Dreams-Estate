@@ -17,7 +17,7 @@ const WishCard = ({ wish, handleRemove}) => {
 
   const convertDate = new Date(createdAt).toLocaleDateString();
 
-console.log(wish);
+// console.log(wish);
   
   return (
     <div>
