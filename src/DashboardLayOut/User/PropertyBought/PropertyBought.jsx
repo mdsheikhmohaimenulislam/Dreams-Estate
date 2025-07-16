@@ -12,15 +12,26 @@ const PropertyBought = () => {
 
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("access-token");  // get token from localStorage
+        if (!token) {
+          console.error("No token found, you must login first");
+          return;
+        }
         const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/makeOffer/${user.email}`
+          `${import.meta.env.VITE_API_URL}/makeOffer/${user.email}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,  // attach token here
+            },
+          }
         );
         setProperties(res.data);
       } catch (err) {
         console.error("Error fetching bought properties:", err);
       }
     };
-    document.title = "PropertyBough";
+
+    document.title = "PropertyBought";
     fetchData();
   }, [user?.email]);
 

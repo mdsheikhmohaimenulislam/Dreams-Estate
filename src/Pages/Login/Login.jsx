@@ -72,6 +72,7 @@ try {
   toast.success("Login successful!");
   navigate(location?.state || "/");
 } catch (error) {
+  setErrorMessage(error)
   setErrorMessage(error.message);
   setErrorMessage(errorMessage);
 }
