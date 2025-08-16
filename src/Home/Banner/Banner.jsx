@@ -13,8 +13,13 @@ const Banner = () => {
           <div className="p-8">
             <h1 className="text-5xl font-bold">Welcome to Dreams Estate</h1>
             <p className="py-6">
-              Welcome to Dreams Estate — your trusted destination for buying
-              premium properties with ease, security, and confidence.
+              Dreams Estate is a modern real estate platform dedicated to
+              helping you find your perfect home, investment property, or
+              rental. Whether you're buying, selling, or renting, we offer a
+              seamless experience with a curated selection of properties, expert
+              guidance, and cutting-edge tools to make your real estate journey
+              effortless. Our mission is to turn your property dreams into
+              reality with transparency, trust, and personalized service.
             </p>
             <Link
               to="/properties

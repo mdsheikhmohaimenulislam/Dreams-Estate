@@ -1,6 +1,19 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+
+
+
+
+.active{
+  color:rgb(64, 127, 255);
+}
+
+
+
+
+
+
 /* 
 The StripeElement class is applied to the Element container by default.
 More info: https://stripe.com/docs/stripe-js/reference#element-options

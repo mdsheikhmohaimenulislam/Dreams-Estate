@@ -34,8 +34,7 @@ const features = [
 export default function ElementsSection() {
   return (
     <section className="w-11/12 mx-auto mt-20 rounded-lg bg-gray-900 text-white py-16 px-10">
-      <div className="flex max-w-8xl mx-auto text-center">
-        <h2 className="flex-2  text-9xl font-bold">150+</h2>
+      <div className="flex-col flex md:flex-row-reverse max-w-8xl mx-auto text-center">
         <div className="flex-1">
           <h3 className="text-2xl font-bold mt-2">
             Dreams Estate
@@ -47,6 +46,7 @@ export default function ElementsSection() {
             standards.
           </p>
         </div>
+        <h2 className="flex-2  text-9xl font-bold">150+</h2>
       </div>
 
       <Marquee
