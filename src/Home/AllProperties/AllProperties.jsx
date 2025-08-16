@@ -53,7 +53,7 @@ const AllProperties = () => {
               onChange={(e) => setSearchText(e.target.value)}
               className="input input-bordered w-full"
             />
-            <button className="btn btn-primary" type="submit">
+            <button className="btn bg-[#004d56] text-white" type="submit">
               Search
             </button>
           </form>
@@ -72,7 +72,7 @@ const AllProperties = () => {
       </div>
 
       {/* Property Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {properties.length === 0 ? (
           <p className="text-center col-span-3 text-red-500 mt-10">
             No properties found
