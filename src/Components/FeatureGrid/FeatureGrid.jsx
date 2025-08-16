@@ -60,7 +60,7 @@ const features = [
 
 
   return (
-    <div className="grid md:grid-cols-3 w-11/12 mx-auto mt-20 gap-6 px-4 py-8">
+    <div className="grid md:grid-cols-3 w-11/12 mx-auto mt-20 gap-5  py-8">
       {features.map((feature, idx) => (
         <div key={idx} className="space-y-2 bg-base-300 p-5  rounded-xl">
           <div className="text-2xl">{feature.icon}</div>

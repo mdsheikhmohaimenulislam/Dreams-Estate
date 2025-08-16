@@ -18,7 +18,7 @@ const propertyFeatures = [
 
 const PropertyFeatures = () => {
   return (
-    <div className="bg-blue-50 p-8 rounded-xl max-w-7xl mx-auto my-10">
+    <div className="bg-blue-50 p-8 rounded-xl w-11/12 mx-auto my-10">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         {/* Grid of features */}
         <div className="grid grid-cols-3 gap-4">
