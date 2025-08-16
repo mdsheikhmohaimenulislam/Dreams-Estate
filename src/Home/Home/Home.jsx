@@ -4,6 +4,8 @@ import LatestUserReviews from "../../Components/LatestUserReviews/LatestUserRevi
 import FeatureGrid from "../../Components/FeatureGrid/FeatureGrid";
 import PropertyFeatures from "../../Components/PluginCompatibility/PluginCompatibility";
 import NewPropertiesSection from "../../Components/NewPropertiesSection/NewPropertiesSection";
+import ElementsSection from "../../Components/ElementsSection/ElementsSection";
+
 
 const Home = () => {
   return (
@@ -12,6 +14,7 @@ const Home = () => {
       <NewPropertiesSection/>
       <FeatureGrid/>
       <PropertyFeatures/>
+      <ElementsSection/>
       <LatestUserReviews/>
     </div>
   );

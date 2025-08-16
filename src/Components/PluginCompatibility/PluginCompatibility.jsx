@@ -18,7 +18,7 @@ const propertyFeatures = [
 
 const PropertyFeatures = () => {
   return (
-    <div className="bg-blue-50 p-8 rounded-xl w-11/12 mx-auto my-10">
+    <div className="bg-gray-900 p-8 rounded-xl w-11/12 mx-auto my-10">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         {/* Grid of features */}
         <div className="grid grid-cols-3 gap-4">
@@ -38,8 +38,8 @@ const PropertyFeatures = () => {
           <h4 className="flex items-center gap-2 text-blue-600 text-sm font-medium">
             <span>🏘️</span> Property Tools
           </h4>
-          <h2 className="text-2xl font-bold mt-2 mb-4">Smart Features for Real Estate</h2>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <h2 className="text-2xl text-white font-bold mt-2 mb-4">Smart Features for Real Estate</h2>
+          <p className="text-gray-400 text-sm leading-relaxed">
             Our platform includes all the essential features buyers and agents expect:
             verified listings, 360° tours, map views, pricing history, and more. Whether you're
             searching or selling, enjoy seamless real estate experiences with the best tools
