@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useLocation, useNavigate, useParams} from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
@@ -27,8 +27,6 @@ const PropertyDetails = () => {
 
   const location = useLocation();
   const { status } = location.state || {}; //  fallback in case state is null
-
-
 
   const {
     data: property,
@@ -68,7 +66,7 @@ const PropertyDetails = () => {
   const {
     title,
     image,
-    location:propertyLocation,
+    location: propertyLocation,
     Details,
     MaximumPrice,
     MinimumPrice,
@@ -88,13 +86,16 @@ const PropertyDetails = () => {
     });
   };
 
+  const handleHome = () => {
+    navigate(-1);
+  };
 
-
-
-  
   return (
     <div>
       <div className="w-11/12 mx-auto mt-20">
+        <button onClick={handleHome} className="btn bg-[#004d56] text-white">
+          Back Home
+        </button>
         <div className="flex flex-col md:flex-row gap-6 p-6">
           <div className="w-full md:w-1/2">
             <img
@@ -106,7 +107,8 @@ const PropertyDetails = () => {
           <div className="w-full md:w-1/2 space-y-4">
             <h2 className="text-3xl font-bold">{title}</h2>
             <p>
-              <span className="font-semibold">Location:</span> {propertyLocation}
+              <span className="font-semibold">Location:</span>{" "}
+              {propertyLocation}
             </p>
             <p>
               <span className="font-semibold">minPrice:</span> ${MinimumPrice}
