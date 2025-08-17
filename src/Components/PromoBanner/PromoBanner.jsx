@@ -2,9 +2,9 @@ import Marquee from "react-fast-marquee";
 
 const PromoBanner = () => {
   return (
-    <div className="w-full mt-20">
+    <div className=" mt-20 w-11/12 mx-auto">
       {/* Top Notification Bar */}
-      <div className="bg-blue-500 text-white text-sm md:text-lg lg:text-3xl text-center py-2 font-semibold tracking-wide uppercase flex items-center justify-center gap-2">
+      <div className="bg-blue-500  text-white text-sm md:text-lg lg:text-3xl text-center py-2 font-semibold tracking-wide uppercase flex items-center justify-center gap-2">
         <span role="img" aria-label="gift" className=" text-lg lg:text-4xl">
           🎁
         </span>
@@ -13,7 +13,7 @@ const PromoBanner = () => {
       </div>
 
       {/* Background Image Banner */}
-      <div className="relative h-[800px] w-full">
+      <div className="relative h-[800px] w-full ">
         {/* Background Image */}
         <img
           src="https://i.ibb.co.com/k6xhp2d5/Whats-App-Image-2025-07-14-at-5-55-42-PM.jpg"
@@ -24,7 +24,7 @@ const PromoBanner = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-600 opacity-60"></div>
 
         {/* Overlay Text */}
-        <div className="relative z-10 h-full flex items-center justify-center px-4 -bottom-80">
+        <div className="relative z-10 h-full flex items-center justify-center px-4 -bottom-80 ">
           <Marquee
             speed={100}
             pauseOnHover
