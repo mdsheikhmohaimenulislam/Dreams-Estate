@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 const Banner = () => {
   return (
-    <div className="hero bg-base-200  min-h-screen">
+    <div className="hero bg-gray-900  min-h-screen">
       <div className="hero-content p-0 flex-col lg:flex-row-reverse">
         <img
           src="https://i.ibb.co/cSjm1sNP/c11c8b313733385b2a366ecbf5903002.jpg"
@@ -11,8 +11,8 @@ const Banner = () => {
         />
         <div>
           <div className="p-8">
-            <h1 className="text-5xl font-bold">Welcome to Dreams Estate</h1>
-            <p className="py-6">
+            <h1 className="text-5xl font-bold text-white">Welcome to Dreams Estate</h1>
+            <p className="py-6 text-white">
               Dreams Estate is a modern real estate platform dedicated to
               helping you find your perfect home, investment property, or
               rental. Whether you're buying, selling, or renting, we offer a

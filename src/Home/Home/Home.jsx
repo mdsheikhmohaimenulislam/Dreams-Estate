@@ -5,6 +5,7 @@ import FeatureGrid from "../../Components/FeatureGrid/FeatureGrid";
 import PropertyFeatures from "../../Components/PluginCompatibility/PluginCompatibility";
 import NewPropertiesSection from "../../Components/NewPropertiesSection/NewPropertiesSection";
 import ElementsSection from "../../Components/ElementsSection/ElementsSection";
+import LatestBlog from "../../Components/LatestBlog/LatestBlog";
 
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
     <div>
       <Banner />
       <NewPropertiesSection/>
+      <LatestBlog/>
       <FeatureGrid/>
       <PropertyFeatures/>
       <ElementsSection/>
