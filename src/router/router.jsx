@@ -28,6 +28,7 @@ import ManageReviews from "../DashboardLayOut/Admin/ManageReviews";
 import UserPrivateRouter from "../Context/UserPrivateRouter";
 import AgentPrivateRouter from "../Context/AgentPrivateRouter";
 import AboutUsSection from "../Pages/AboutUsSection/AboutUsSection";
+import ContactUs from "../Components/ContactUs/ContactUs";
 
 export const router = createBrowserRouter([
   {
@@ -45,8 +46,12 @@ export const router = createBrowserRouter([
         element: <AllProperties />,
       },
       {
-        path:"/about",
-        Component:AboutUsSection
+        path: "/contact",
+        Component: ContactUs,
+      },
+      {
+        path: "/about",
+        Component: AboutUsSection,
       },
       {
         path: "/DetailsPage/:id",

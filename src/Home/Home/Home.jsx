@@ -6,6 +6,7 @@ import PropertyFeatures from "../../Components/PluginCompatibility/PluginCompati
 import NewPropertiesSection from "../../Components/NewPropertiesSection/NewPropertiesSection";
 import ElementsSection from "../../Components/ElementsSection/ElementsSection";
 import LatestBlog from "../../Components/LatestBlog/LatestBlog";
+import PromoBanner from "../../Components/PromoBanner/PromoBanner";
 
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
     <div>
       <Banner />
       <NewPropertiesSection/>
+      <PromoBanner/>
       <LatestBlog/>
       <FeatureGrid/>
       <PropertyFeatures/>

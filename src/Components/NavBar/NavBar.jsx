@@ -54,6 +54,10 @@ const NavBar = () => {
         <NavLink className="text-xl font-extrabold" to="/about">
           About
         </NavLink>
+        <br />
+        <NavLink className="text-xl font-extrabold" to="/contact">
+          Contact
+        </NavLink>
       </div>
     </>
   );
@@ -116,6 +120,9 @@ const NavBar = () => {
             </NavLink>
             <NavLink className="text-xl font-extrabold ml-5" to="/about">
               About
+            </NavLink>
+            <NavLink className="text-xl font-extrabold ml-5" to="/contact">
+              Contact
             </NavLink>
             {link}
           </ul>
